@@ -17,7 +17,13 @@ const PAYMENT_LINKS = {
 // 打开对应套餐的支付页面
 function openPayment(packageId) {
   const link = PAYMENT_LINKS[packageId] || WALLET_URL;
-  window.open(link, '_blank', 'noopener');
+  // 页面被嵌入 iframe 时，window.open 会被浏览器当弹窗拦截导致点击无反应，
+  // 此时让整个页面（顶层窗口）跳转；独立访问时正常跳转
+  if (window.self !== window.top) {
+    window.top.location.href = link;
+    return;
+  }
+  window.location.href = link;
 }
 
 // 关闭支付弹窗（保留兼容）
