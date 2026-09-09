@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>扶九API - API 接入文档</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --accent: #ea580c;
+            --text: #1f2937;
+            --text-2: #4b5563;
+            --bg: #f8fafc;
+            --card: rgba(255, 255, 255, 0.9);
+            --line: rgba(15, 118, 110, 0.18);
+            --grad: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.75;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(145deg, #f0fdfa 0%, #fff7ed 50%, #f8fafc 100%),
+                linear-gradient(rgba(20, 184, 166, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(20, 184, 166, 0.08) 1px, transparent 1px);
+            background-size: 100% 100%, 36px 36px, 36px 36px;
+            z-index: -2;
+        }
+
+        .glow { position: fixed; border-radius: 50%; filter: blur(60px); z-index: -1; }
+        .glow.t { width: 500px; height: 500px; top: -200px; right: -150px; background: rgba(20,184,166,0.22); }
+        .glow.b { width: 420px; height: 420px; bottom: -160px; left: -100px; background: rgba(251,146,60,0.18); }
+
+        .wrap { max-width: 880px; margin: 0 auto; padding: 36px 20px 60px; }
+
+        .back { display:inline-flex; align-items:center; gap:6px; color:var(--primary); text-decoration:none; font-size:14px; font-weight:600; margin-bottom:20px; }
+        .back:hover { color: var(--accent); }
+
+        .hero { text-align:center; margin-bottom:36px; }
+        .hero h1 { font-size:34px; font-weight:800; background:var(--grad); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:10px; }
+        .hero p { color:var(--text-2); font-size:16px; }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--line);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 18px;
+            padding: 26px 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 12px 30px rgba(15,118,110,0.08);
+        }
+
+        .card h2 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--line);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card h3 { font-size: 17px; font-weight: 700; margin: 18px 0 10px; color: var(--primary-dark); }
+
+        .card p, .card li { color: var(--text-2); margin-bottom: 8px; }
+        .card ul, .card ol { margin-left: 22px; }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 130px 1fr;
+            gap: 10px 16px;
+            margin: 12px 0;
+        }
+        .info-grid .k { font-weight: 700; color: var(--primary-dark); }
+        .info-grid .v { color: var(--text-2); word-break: break-all; }
+        .info-grid .v code {
+            background: #f1f5f9;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-family: "SF Mono", Monaco, Consolas, monospace;
+            font-size: 13px;
+            color: var(--accent);
+        }
+
+        .step {
+            display: flex;
+            gap: 14px;
+            margin-bottom: 16px;
+            align-items: flex-start;
+        }
+        .step-num {
+            flex-shrink: 0;
+            width: 32px; height: 32px;
+            border-radius: 50%;
+            background: var(--grad);
+            color: white;
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 15px;
+        }
+        .step-body h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+        .step-body p { margin: 0; color: var(--text-2); }
+
+        pre {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 16px 18px;
+            margin: 10px 0;
+            overflow-x: auto;
+            font-family: "SF Mono", Monaco, Consolas, monospace;
+            font-size: 13.5px;
+            line-height: 1.65;
+        }
+        pre .c { color: #64748b; }
+        pre .s { color: #86efac; }
+        pre .k { color: #fbbf24; }
+        pre .n { color: #93c5fd; }
+
+        .tip {
+            background: linear-gradient(135deg, rgba(234,88,12,0.08), rgba(20,184,166,0.08));
+            border: 1px solid rgba(234,88,12,0.2);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin: 12px 0;
+            font-size: 14px;
+            color: var(--text-2);
+        }
+        .tip b { color: var(--accent); }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--grad);
+            color: white;
+            padding: 11px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            margin: 10px 6px 0 0;
+            box-shadow: 0 6px 18px rgba(15,118,110,0.22);
+            transition: transform .2s, box-shadow .2s;
+        }
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 26px rgba(15,118,110,0.32); }
+
+        .cta {
+            text-align: center;
+            margin-top: 30px;
+            padding: 30px;
+            background: var(--card);
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            backdrop-filter: blur(16px);
+        }
+        .cta h2 { font-size: 22px; margin-bottom: 8px; }
+        .cta p { color: var(--text-2); margin-bottom: 18px; }
+    </style>
+</head>
+<body>
+<div class="glow t"></div>
+<div class="glow b"></div>
+
+<div class="wrap">
+    <a href="/" class="back">← 返回首页</a>
+
+    <div class="hero">
+        <h1>扶九API 接入文档</h1>
+        <p>OpenAI 兼容协议，三分钟接入全球主流 AI 大模型</p>
+    </div>
+
+    <!-- 一、基础信息 -->
+    <div class="card">
+        <h2>📌 一、基础信息</h2>
+        <div class="info-grid">
+            <div class="k">API 地址</div>
+            <div class="v"><code>https://fujiuapi.com</code></div>
+            <div class="k">鉴权方式</div>
+            <div class="v">HTTP Header <code>Authorization: Bearer &lt;API_KEY&gt;</code></div>
+            <div class="k">兼容协议</div>
+            <div class="v">OpenAI API 协议（可直接替换 base_url 接入）</div>
+            <div class="k">数据格式</div>
+            <div class="v">JSON</div>
+        </div>
+        <div class="tip">
+            💡 <b>提示：</b>扶九API 完全兼容 OpenAI 协议，任何支持自定义 base_url 的客户端（如 OpenCode、Cursor、Claude Code、Dify、FastGPT 等）均可直接使用。
+        </div>
+    </div>
+
+    <!-- 二、快速开始 -->
+    <div class="card">
+        <h2>🚀 二、快速开始</h2>
+
+        <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-body">
+                <h4>注册并登录</h4>
+                <p>访问 <a href="https://fujiuapi.com/sign-up" target="_blank">fujiuapi.com/sign-up</a> 注册账号并登录。</p>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-body">
+                <h4>创建 API 密钥</h4>
+                <p>进入「<a href="https://fujiuapi.com/keys" target="_blank">API 密钥</a>」页面，点击「+ 创建 API 密钥」。</p>
+                <ul style="margin-top:6px;">
+                    <li><b>名称</b>：随便填写，方便识别即可</li>
+                    <li><b>分组</b>：推荐选择 <code style="color:var(--accent);background:#f1f5f9;padding:1px 6px;border-radius:4px;">vip</code>（3 倍倍率，费率最划算）</li>
+                    <li><b>过期时间</b>：默认「永不过期」</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-body">
+                <h4>复制密钥并使用</h4>
+                <p>创建后复制 <code>sk-</code> 开头的密钥，在客户端中填入 API 地址和密钥即可。</p>
+            </div>
+        </div>
+
+        <a href="https://fujiuapi.com/keys" target="_blank" class="btn">🔑 前往创建密钥</a>
+        <a href="https://fujiuapi.com/pricing" target="_blank" class="btn">📋 查看可用模型</a>
+    </div>
+
+    <!-- 三、核心接口 -->
+    <div class="card">
+        <h2>🔧 三、核心接口</h2>
+
+        <h3>1. 获取模型列表</h3>
+<pre><span class="c"># 请求</span>
+GET https://fujiuapi.com/v1/models
+Authorization: Bearer <span class="s">你的API_KEY</span></pre>
+
+        <h3>2. 聊天补全（Chat Completions）</h3>
+<pre><span class="c"># 请求</span>
+POST https://fujiuapi.com/v1/chat/completions
+Authorization: Bearer <span class="s">你的API_KEY</span>
+Content-Type: application/json
+
+{
+  <span class="k">"model"</span>: <span class="s">"claude-sonnet-4-5"</span>,
+  <span class="k">"messages"</span>: [
+    {<span class="k">"role"</span>: <span class="s">"user"</span>, <span class="k">"content"</span>: <span class="s">"你好"</span>}
+  ]
+}</pre>
+
+        <h3>3. 流式输出（SSE）</h3>
+        <p>在请求体中加上 <code>"stream": true</code>，服务端会以 SSE（Server-Sent Events）格式逐字返回结果。</p>
+<pre>{
+  <span class="k">"model"</span>: <span class="s">"claude-sonnet-4-5"</span>,
+  <span class="k">"messages"</span>: [{<span class="k">"role"</span>: <span class="s">"user"</span>, <span class="k">"content"</span>: <span class="s">"你好"</span>}],
+  <span class="k">"stream"</span>: <span class="n">true</span>
+}</pre>
+
+        <h3>4. 文本补全（Completions）</h3>
+<pre>POST https://fujiuapi.com/v1/completions
+Authorization: Bearer <span class="s">你的API_KEY</span>
+
+{
+  <span class="k">"model"</span>: <span class="s">"gpt-4o-mini"</span>,
+  <span class="k">"prompt"</span>: <span class="s">"你好"</span>,
+  <span class="k">"max_tokens"</span>: <span class="n">100</span>
+}</pre>
+    </div>
+
+    <!-- 四、代码示例 -->
+    <div class="card">
+        <h2>💻 四、代码示例</h2>
+
+        <h3>cURL</h3>
+<pre>curl https://fujiuapi.com/v1/chat/completions \
+  -H <span class="s">"Authorization: Bearer sk-你的密钥"</span> \
+  -H <span class="s">"Content-Type: application/json"</span> \
+  -d '{
+    <span class="k">"model"</span>: <span class="s">"claude-sonnet-4-5"</span>,
+    <span class="k">"messages"</span>: [{<span class="k">"role"</span>: <span class="s">"user"</span>, <span class="k">"content"</span>: <span class="s">"你好"</span>}]
+  }'</pre>
+
+        <h3>Python（openai 库）</h3>
+<pre><span class="c">from openai import OpenAI</span>
+
+client = OpenAI(
+    api_key=<span class="s">"sk-你的密钥"</span>,
+    base_url=<span class="s">"https://fujiuapi.com"</span>
+)
+
+resp = client.chat.completions.create(
+    model=<span class="s">"claude-sonnet-4-5"</span>,
+    messages=[{<span class="s">"role"</span>: <span class="s">"user"</span>, <span class="s">"content"</span>: <span class="s">"你好"</span>}]
+)
+print(resp.choices[0].message.content)</pre>
+
+        <h3>Node.js</h3>
+<pre><span class="c">const OpenAI = require("openai");</span>
+
+const client = <span class="n">new</span> OpenAI({
+  apiKey: <span class="s">"sk-你的密钥"</span>,
+  baseURL: <span class="s">"https://fujiuapi.com"</span>
+});
+
+<span class="k">async</span> <span class="n">function</span> <span class="k">run</span>() {
+  const resp = <span class="k">await</span> client.chat.completions.create({
+    model: <span class="s">"claude-sonnet-4-5"</span>,
+    messages: [{ role: <span class="s">"user"</span>, content: <span class="s">"你好"</span> }]
+  });
+  console.log(resp.choices[0].message.content);
+}
+<span class="k">run</span>();</pre>
+
+        <h3>Claude Code 配置</h3>
+<pre><span class="c"># 设置环境变量（Linux / macOS）</span>
+export ANTHROPIC_API_KEY=<span class="s">sk-你的密钥</span>
+export ANTHROPIC_BASE_URL=<span class="s">https://fujiuapi.com</span>
+
+<span class="c"># Windows PowerShell</span>
+<span class="n">$env</span>:ANTHROPIC_API_KEY=<span class="s">"sk-你的密钥"</span>
+<span class="n">$env</span>:ANTHROPIC_BASE_URL=<span class="s">"https://fujiuapi.com"</span></pre>
+    </div>
+
+    <!-- 五、常见问题 -->
+    <div class="card">
+        <h2>❓ 五、常见问题</h2>
+
+        <h3>Q1：如何查看账户余额？</h3>
+        <p>登录后进入「<a href="https://fujiuapi.com/wallet" target="_blank">钱包</a>」页面，可查看当前余额、消费记录和充值。</p>
+
+        <h3>Q2：分组（倍率）是什么意思？</h3>
+        <p>不同分组对应不同的计费倍率：</p>
+        <ul>
+            <li><b>vip</b>：3 倍倍率，性价比最高，推荐日常使用</li>
+            <li><b>svip</b>：4 倍倍率，适合高频调用</li>
+            <li><b>default</b>：1 倍倍率，标准费率</li>
+        </ul>
+        <p>创建 API 密钥时选择对应分组即可，分组决定该密钥的计费倍率。</p>
+
+        <h3>Q3：支持哪些模型？</h3>
+        <p>前往「<a href="https://fujiuapi.com/pricing" target="_blank">模型广场</a>」查看完整可用模型列表，模型会持续更新。</p>
+
+        <h3>Q4：API 密钥忘记保存了怎么办？</h3>
+        <p>API 密钥只在创建时完整显示一次。如果丢失，删除旧密钥并重新创建一个即可。</p>
+
+        <h3>Q5：调用报错怎么办？</h3>
+        <ul>
+            <li><b>401 Unauthorized</b>：密钥错误或已过期，请检查密钥是否正确</li>
+            <li><b>403 Forbidden</b>：余额不足，请充值后重试</li>
+            <li><b>404 Not Found</b>：模型名称错误，请到模型广场确认模型名称</li>
+            <li><b>429 Too Many Requests</b>：请求过于频繁，请降低调用频率</li>
+        </ul>
+
+        <h3>Q6：如何获取技术支持？</h3>
+        <p>添加企业微信客服，获取一对一技术支持与套餐优惠。</p>
+    </div>
+
+    <div class="cta">
+        <h2>准备好了吗？</h2>
+        <p>立即注册扶九API，开启你的 AI 开发之旅</p>
+        <a href="https://fujiuapi.com/sign-up" target="_blank" class="btn">🚀 免费注册</a>
+        <a href="https://fujiuapi.com/keys" target="_blank" class="btn">🔑 创建密钥</a>
+    </div>
+</div>
+</body>
+</html>
