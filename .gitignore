@@ -1,0 +1,18 @@
+# ===== 系统垃圾文件 =====
+.DS_Store
+**/.DS_Store
+Thumbs.db
+
+# ===== 内部 AI 助理 / 归档文件（不部署）=====
+.claude-summary.md
+.tasks/
+CLAUDE.md
+AGENTS.md
+归档/
+
+# ===== Nginx 反向代理参考（仅自建服务器使用，GitHub Pages 用不到）=====
+nginx-config.conf
+nginx-api-proxy.conf
+
+# ===== 朋友的内网穿透配置（含他人服务器信息，禁止公开）=====
+12

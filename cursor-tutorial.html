@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cursor 扶九API配置教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #0f766e;
+            --primary-dark: #115e59;
+            --accent-color: #ea580c;
+            --text-primary: #1f2937;
+            --text-secondary: #4b5563;
+            --bg-main: #f8fafc;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --line-color: rgba(15, 118, 110, 0.18);
+            --gradient-main: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+            --gradient-soft: linear-gradient(135deg, rgba(20, 184, 166, 0.18) 0%, rgba(251, 146, 60, 0.15) 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", sans-serif;
+            color: var(--text-primary);
+            background: var(--bg-main);
+            line-height: 1.75;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(145deg, #f0fdfa 0%, #fff7ed 50%, #f8fafc 100%),
+                linear-gradient(rgba(20, 184, 166, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(20, 184, 166, 0.08) 1px, transparent 1px);
+            background-size: 100% 100%, 36px 36px, 36px 36px;
+            z-index: -2;
+        }
+
+        .glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(56px);
+            z-index: -1;
+        }
+
+        .glow.top {
+            width: 520px;
+            height: 520px;
+            top: -220px;
+            right: -180px;
+            background: rgba(20, 184, 166, 0.25);
+        }
+
+        .glow.bottom {
+            width: 440px;
+            height: 440px;
+            bottom: -180px;
+            left: -120px;
+            background: rgba(251, 146, 60, 0.2);
+        }
+
+        .glass {
+            background: var(--card-bg);
+            border: 1px solid var(--line-color);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 14px 32px rgba(15, 118, 110, 0.12);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 5%;
+            z-index: 1000;
+        }
+
+        .nav-wrap {
+            max-width: 1060px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.85rem 1.1rem;
+            border-radius: 12px;
+        }
+
+        .logo {
+            font-size: 1.15rem;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: var(--primary-color);
+            border: 1px solid rgba(15, 118, 110, 0.3);
+            background: rgba(15, 118, 110, 0.08);
+            border-radius: 8px;
+            padding: 0.45rem 0.9rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .main {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 104px 5% 72px;
+        }
+
+        .hero {
+            padding: 2.6rem 2rem;
+            border-radius: 18px;
+            text-align: center;
+            margin-bottom: 1.4rem;
+            background: var(--gradient-soft);
+        }
+
+        .hero .tag {
+            display: inline-block;
+            margin-bottom: 0.9rem;
+            border-radius: 999px;
+            padding: 0.35rem 0.8rem;
+            background: var(--gradient-main);
+            color: #ffffff;
+            font-size: 0.82rem;
+            font-weight: 700;
+        }
+
+        .hero h1 {
+            font-size: clamp(1.8rem, 3vw, 2.3rem);
+            margin-bottom: 0.6rem;
+        }
+
+        .hero p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .step-card {
+            margin-top: 1.1rem;
+            border-radius: 14px;
+            padding: 1.3rem;
+        }
+
+        .step-head {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .step-no {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-weight: 700;
+            background: var(--gradient-main);
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            font-size: 1.14rem;
+            font-weight: 700;
+        }
+
+        .step-content p {
+            color: var(--text-secondary);
+            margin-bottom: 0.55rem;
+        }
+
+        .step-content a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 1px solid rgba(15, 118, 110, 0.35);
+        }
+
+        .step-content a:hover {
+            color: var(--primary-dark);
+            border-bottom-color: rgba(17, 94, 89, 0.55);
+        }
+
+        .image-wrap {
+            margin-top: 0.75rem;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(15, 118, 110, 0.2);
+            background: #ffffff;
+        }
+
+        .image-wrap img {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        .caption {
+            padding: 0.45rem 0.7rem;
+            font-size: 0.88rem;
+            color: #0f766e;
+            background: rgba(20, 184, 166, 0.07);
+            border-top: 1px solid rgba(15, 118, 110, 0.18);
+        }
+
+        .notice {
+            border-left: 4px solid var(--accent-color);
+            border-radius: 10px;
+            margin-top: 1.2rem;
+            padding: 1rem 1rem 1rem 1.1rem;
+            background: rgba(251, 146, 60, 0.12);
+        }
+
+        .notice h3 {
+            margin-bottom: 0.45rem;
+            font-size: 1.02rem;
+        }
+
+        .notice ul {
+            padding-left: 1.05rem;
+            color: var(--text-secondary);
+        }
+
+        .notice li {
+            margin-bottom: 0.45rem;
+        }
+
+        .success-box {
+            border-left: 4px solid var(--primary-color);
+            border-radius: 10px;
+            margin-top: 1.2rem;
+            padding: 1rem 1rem 1rem 1.1rem;
+            background: rgba(15, 118, 110, 0.12);
+            text-align: center;
+        }
+
+        .success-box h3 {
+            margin-bottom: 0.45rem;
+            font-size: 1.2rem;
+            color: var(--primary-color);
+        }
+
+        .code-block {
+            background: rgba(15, 118, 110, 0.08);
+            border: 1px solid rgba(15, 118, 110, 0.2);
+            border-radius: 8px;
+            padding: 0.8rem 1rem;
+            font-family: "SF Mono", Monaco, Consolas, monospace;
+            font-size: 0.95rem;
+            color: var(--primary-dark);
+            margin: 0.5rem 0;
+            word-break: break-all;
+        }
+
+        footer {
+            margin-top: 2rem;
+            text-align: center;
+            color: #6b7280;
+            font-size: 0.88rem;
+        }
+
+        @media (max-width: 768px) {
+            .main {
+                padding-top: 92px;
+            }
+
+            .hero {
+                padding: 2rem 1.2rem;
+            }
+
+            .step-card {
+                padding: 1rem;
+            }
+
+            .logo {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="glow top"></div>
+    <div class="glow bottom"></div>
+
+    <nav class="navbar">
+        <div class="nav-wrap glass">
+            <div class="logo">Cursor 扶九API配置教程</div>
+            <a href="index.html" class="back-link">返回首页</a>
+        </div>
+    </nav>
+
+    <main class="main">
+        <section class="hero glass">
+            <span class="tag">配置教程</span>
+            <h1>Cursor 扶九API配置指南</h1>
+            <p>通过扶九API 在 Cursor 中使用 Claude 模型，享受更优质的服务</p>
+        </section>
+
+        <!-- 步骤 1 -->
+        <section class="step-card glass">
+            <div class="step-head">
+                <div class="step-no">1</div>
+                <h2 class="step-title">购买 Cursor Pro 账号</h2>
+            </div>
+            <div class="step-content">
+                <p>前往淘宝购买一个<strong>没有额度</strong>的 Cursor Pro 账号（共享号）。</p>
+                <p>作者购买的是 <strong>25 元的共享号</strong>，性价比很高。</p>
+                <div class="notice">
+                    <h3>💡 为什么选择无额度的 Pro 号？</h3>
+                    <ul>
+                        <li>Cursor Pro 原生只有 20 美金额度，使用扶九API 可以获得更多额度</li>
+                        <li>共享号价格便宜，配合扶九API使用更划算</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 步骤 2 -->
+        <section class="step-card glass">
+            <div class="step-head">
+                <div class="step-no">2</div>
+                <h2 class="step-title">获取扶九API Key</h2>
+            </div>
+            <div class="step-content">
+                <p>确保你已经拥有扶九API 的 API Key。</p>
+                <p>如果没有，请联系 QQ 2306309941（或扫码添加企业微信客服）获取扶九API服务。</p>
+            </div>
+        </section>
+
+        <!-- 步骤 3 -->
+        <section class="step-card glass">
+            <div class="step-head">
+                <div class="step-no">3</div>
+                <h2 class="step-title">配置 Cursor 设置</h2>
+            </div>
+            <div class="step-content">
+                <p>打开 Cursor 设置，按照下图进行配置：</p>
+                <div class="image-wrap">
+                    <img src="img/cursor.png?v=1.0" alt="Cursor 配置截图">
+                    <div class="caption">Cursor 设置配置示例</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 步骤 4 -->
+        <section class="step-card glass">
+            <div class="step-head">
+                <div class="step-no">4</div>
+                <h2 class="step-title">填写 API 地址</h2>
+            </div>
+            <div class="step-content">
+                <p>在 Cursor 设置中填写以下 API 地址：</p>
+                <div class="code-block">https://fujiuapi.com/v1</div>
+            </div>
+        </section>
+
+        <!-- 步骤 5 -->
+        <section class="step-card glass">
+            <div class="step-head">
+                <div class="step-no">5</div>
+                <h2 class="step-title">添加模型</h2>
+            </div>
+            <div class="step-content">
+                <p>在模型设置中添加以下模型（至少添加一个）：</p>
+                <div class="code-block">claude-opus-4-6</div>
+                <p>如果想省钱，可以添加：</p>
+                <div class="code-block">claude-sonnet-4-6</div>
+                <p><strong>建议：两个都添加并开启</strong>，这样可以根据需要切换使用。</p>
+                <div class="image-wrap">
+                    <img src="img/cursor1.png?v=1.0" alt="添加模型截图">
+                    <div class="caption">模型添加示例</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 完成 -->
+        <section class="success-box glass">
+            <h3>🎉 配置完成！</h3>
+            <p>现在你可以在 Cursor 中使用扶九API 了</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--text-secondary);">享受更流畅的 AI 编程体验</p>
+        </section>
+
+        <footer>
+        Cursor 扶九API 配置教程
+        </footer>
+    </main>
+</body>
+</html>

@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sisyphus 进阶指南 - Ultrawork Mode</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #7c83ff;
+            --primary-dark: #5f66e6;
+            --secondary-color: #a78bfa;
+            --accent-color: #06b6d4;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --bg-dark: #f8fafc;
+            --bg-card: rgba(255, 255, 255, 0.75);
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --gradient-1: linear-gradient(135deg, #a78bfa 0%, #818cf8 100%);
+            --gradient-2: linear-gradient(135deg, #e9d5ff 0%, #c7d2fe 100%);
+            --gradient-3: linear-gradient(135deg, #bae6fd 0%, #99f6e4 100%);
+            --gradient-fire: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.8;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(165deg, #faf5ff 0%, #f0f9ff 30%, #fdf4ff 60%, #f0fdfa 100%),
+                linear-gradient(rgba(124, 131, 255, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(124, 131, 255, 0.08) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            z-index: -2;
+        }
+
+        .bg-orb {
+            position: fixed;
+            width: 520px;
+            height: 520px;
+            border-radius: 50%;
+            filter: blur(50px);
+            z-index: -1;
+            opacity: 0.6;
+            animation: float 18s ease-in-out infinite;
+        }
+
+        .bg-orb.primary {
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.35) 0%, transparent 65%);
+            top: -220px;
+            right: -180px;
+        }
+
+        .bg-orb.accent {
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.28) 0%, transparent 65%);
+            bottom: -200px;
+            left: -160px;
+            animation-duration: 22s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(50px, 50px);
+            }
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(124, 131, 255, 0.2);
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.12);
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 5%;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-btn {
+            padding: 0.5rem 1.2rem;
+            background: rgba(124, 131, 255, 0.15);
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            border: 1px solid rgba(124, 131, 255, 0.35);
+        }
+
+        .back-btn:hover {
+            background: rgba(124, 131, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .main-content {
+            padding: 100px 5% 80px;
+            max-width: 1100px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 2rem;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            background: var(--gradient-fire);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: white;
+            box-shadow: 0 10px 24px rgba(239, 68, 68, 0.25);
+        }
+
+        .hero-section h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #1e293b 0%, #64748b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-section p {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .hero-section p code {
+            background: rgba(239, 68, 68, 0.15);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .hero-feature-card {
+            border-radius: 20px;
+            padding: 3rem;
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(245, 158, 11, 0.15) 100%);
+            border: 2px solid rgba(239, 68, 68, 0.3);
+            box-shadow: 0 20px 50px rgba(239, 68, 68, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 2rem;
+        }
+
+        .hero-feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 25px 60px rgba(239, 68, 68, 0.3);
+        }
+
+        .hero-feature-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--gradient-fire);
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 12px 24px rgba(239, 68, 68, 0.3);
+        }
+
+        .hero-feature-card h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            background: var(--gradient-fire);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-feature-card .subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .trigger-info {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid #ef4444;
+            padding: 1rem 1.2rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+        }
+
+        .trigger-info code {
+            background: rgba(239, 68, 68, 0.15);
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .sub-features-section {
+            margin-top: 3rem;
+        }
+
+        .sub-features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .sub-feature-card {
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(124, 131, 255, 0.15);
+        }
+
+        .sub-feature-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.15);
+        }
+
+        .sub-feature-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 6px 14px rgba(99, 102, 241, 0.2);
+        }
+
+        .sub-feature-card h4 {
+            font-size: 1.05rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .sub-feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            border-radius: 16px;
+            padding: 2rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-1);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.25);
+        }
+
+        .feature-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .alert-box {
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            border-left: 4px solid;
+        }
+
+        .alert-box.warning {
+            background: rgba(245, 158, 11, 0.12);
+            border-color: var(--warning-color);
+        }
+
+        .alert-box.info {
+            background: rgba(6, 182, 212, 0.12);
+            border-color: var(--accent-color);
+        }
+
+        .alert-box h4 {
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .alert-box p {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .alert-box code {
+            background: rgba(99, 102, 241, 0.12);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            color: var(--primary-color);
+        }
+
+        footer {
+            padding: 2rem 5%;
+            text-align: center;
+            color: var(--text-secondary);
+            margin-top: 3rem;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 90px 5% 60px;
+            }
+
+            .hero-section h1 {
+                font-size: 2rem;
+            }
+
+            .hero-feature-card {
+                padding: 2rem;
+            }
+
+            .sub-features-grid {
+                .features-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .feature-card {
+                    padding: 1.5rem;
+                }
+            }
+
+            .sub-feature-card {
+                padding: 1.2rem;
+            }
+    </style>
+</head>
+
+<body>
+    <div class="bg-orb primary"></div>
+    <div class="bg-orb accent"></div>
+
+    <nav class="navbar glass">
+        <div class="nav-container">
+            <div class="logo">⚡ Sisyphus 进阶指南</div>
+            <a href="index.html" class="back-btn">← 返回首页</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <section class="hero-section glass">
+            <div class="hero-badge">🔥 自律军团 - DISCIPLINE AGENTS</div>
+            <h1>自律军团 - 完整的 AI 开发团队</h1>
+            <p>Sisyphus 调度军团并行工作,任务完成前绝不罢休。</p>
+        </section>
+
+        <div class="hero-feature-card glass">
+            <div class="hero-feature-icon">🤖</div>
+            <h2>自律军团 (Discipline Agents)</h2>
+            <p class="subtitle">一支完整的 AI 开发团队，Sisyphus 负责调度多个专业智能体并行工作，直到任务 100% 完成。</p>
+            <div class="trigger-info">
+                <strong>⚡ 警告：</strong>token 消耗会增加 <code>2-5倍</code> 建议买 <code>龙虾套餐</code>
+            </div>
+        </div>
+
+        <h2 class="section-title">军团能力体系</h2>
+
+        <div class="sub-features-section">
+            <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--text-primary);">🎯 核心机制</h3>
+            <div class="sub-features-grid">
+
+                <div class="sub-feature-card glass">
+                    <div class="sub-feature-icon">🚪</div>
+                    <h4>IntentGate 意图门</h4>
+                    <p>真正行动前，先分析用户的真实意图。彻底告别被字面意思误导的 AI 废话。</p>
+                </div>
+                <div class="sub-feature-card glass">
+                    <div class="sub-feature-icon">🔗</div>
+                    <h4>基于哈希的编辑工具</h4>
+                    <p>每次修改都通过 LINE#ID 内容哈希验证、0% 错误修改。灵感来自 oh-my-pi。</p>
+                </div>
+                <div class="sub-feature-card glass">
+                    <div class="sub-feature-icon">🛠️</div>
+                    <h4>LSP + AST-Grep</h4>
+                    <p>工作区级别的重命名、构建前诊断、基于 AST 的重写。为 Agent 提供 IDE 级别的精度。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-features-section">
+            <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--text-primary);">🧠 智能体系统</h3>
+            <div class="sub-features-grid">
+                <div class="sub-feature-card glass">
+                    <div class="sub-feature-icon">🧠</div>
+                    <h4>后台智能体</h4>
+                    <p>同时发射 5+ 个专家并行工作。保持上下文干净，随时获取成果。</p>
+                </div>
+                <div class="sub-feature-card glass">
+                    <div class="sub-feature-icon">📚</div>
+                    <h4>内置 MCP</h4>
+                    <p>Exa (网络搜索)、Context7 (官方文档)、Grep.app (GitHub 源码搜索)。默认开启。</p>
+                </div>
+                <div class="sub-feature-card glass">
+                    <div class="sub-feature-icon">🔁</div>
+                    <h4>Ralph Loop / /ulw-loop</h4>
+                    <p>自我引用闭环。达不到 100% 完成度绝不停止。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-features-section">
+            <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--text-primary);">✅ 质量保证</h3>
+            <div class="sub-features-grid">
+                <div class="sub-feature-card glass">
+                    <div class="sub-feature-icon">✅</div>
+                    <h4>Todo 强制执行</h4>
+                    <p>Agent 想要摸鱼？系统直接揪着领子拽回来。你的任务，必须完成。</p>
+                </div>
+                <div class="sub-feature-card glass">
+                    <div class="sub-feature-icon">💬</div>
+                    <h4>注释审查员</h4>
+                    <p>剔除带有浓烈 AI 味的冗余注释。写出的代码就像老练的高级工程师写的。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-features-section">
+            <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--text-primary);">🔧 开发工具</h3>
+            <div class="sub-features-grid">
+                <div class="sub-feature-card glass">
+                    <div class="sub-feature-icon">🖥️</div>
+                    <h4>Tmux 集成</h4>
+                    <p>完整的交互式终端支持。跑 REPL、用调试器、用 TUI 工具，全都在实时会话中完成。</p>
+                </div>
+                <div class="sub-feature-card glass">
+                    <div class="sub-feature-icon">🔌</div>
+                    <h4>Claude Code 兼容</h4>
+                    <p>你现有的 Hooks、命令、技能、MCP 和插件？全都能无缝迁移过来。</p>
+                </div>
+                <div class="sub-feature-card glass">
+                    <div class="sub-feature-icon">🎯</div>
+                    <h4>技能内嵌 MCP</h4>
+                    <p>技能自带其所需的 MCP 服务器。按需开启，不会撑爆你的上下文窗口。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-features-section">
+            <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--text-primary);">📋 规划工具</h3>
+            <div class="sub-features-grid">
+                <div class="sub-feature-card glass">
+                    <div class="sub-feature-icon">📋</div>
+                    <h4>Prometheus 规划师</h4>
+                    <p>动手写代码前，先通过访谈模式做好战略规划。</p>
+                </div>
+                <div class="sub-feature-card glass">
+                    <div class="sub-feature-icon">🔍</div>
+                    <h4>/init-deep</h4>
+                    <p>在整个项目目录层级中自动生成 AGENTS.md。不仅省 Token，还能大幅提升 Agent 理解力。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-box info glass">
+            <h4>💡 如何开始使用？</h4>
+            <p><strong>第一步：安装 OpenCode 像素猫扩展</strong></p>
+            <p>在 VSCode 扩展市场搜索并安装 OpenCode 像素猫扩展。</p>
+
+            <p style="margin-top: 1rem;"><strong>第二步：安装 oh-my-opencode</strong></p>
+            <p>在聊天框输入以下内容<code>(AI能看懂自动会工作)</code>：</p>
+            <pre
+                style="background: rgba(0,0,0,0.05); padding: 0.8rem; border-radius: 6px; overflow-x: auto; font-size: 0.85rem; margin: 0.5rem 0;"><code>Install and configure oh-my-opencode by following the instructions here:
+https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/refs/heads/master/docs/guide/installation.md</code></pre>
+
+            <p style="margin-top: 1rem;"><strong>第三步：配置模型</strong></p>
+            <p>在 <code>~/.config/opencode/oh-my-opencode.json</code> 中配置以下内容：</p>
+            <pre
+                style="background: rgba(0,0,0,0.05); padding: 0.8rem; border-radius: 6px; overflow-x: auto; font-size: 0.75rem; margin: 0.5rem 0; max-height: 300px;"><code>{
+  "$schema": "https://raw.githubusercontent.com/code-yeongyu/oh-my-opencode/master/assets/oh-my-opencode.schema.json",
+  "agents": {
+    "sisyphus": { "model": "aiapi3/claude-opus-4-6", "variant": "standard" },
+    "hephaestus": { "model": "aiapi3/claude-sonnet-4-6", "variant": "standard" },
+    "oracle": { "model": "aiapi3/claude-opus-4-6", "variant": "standard" },
+    "librarian": { "model": "aiapi3/claude-sonnet-4-6" },
+    "explore": { "model": "aiapi3/claude-sonnet-4-6" },
+    "multimodal-looker": { "model": "aiapi3/claude-sonnet-4-6" },
+    "prometheus": { "model": "aiapi3/claude-opus-4-6", "variant": "standard" },
+    "metis": { "model": "aiapi3/claude-opus-4-6", "variant": "standard" },
+    "momus": { "model": "aiapi3/claude-opus-4-6", "variant": "standard" },
+    "atlas": { "model": "aiapi3/claude-sonnet-4-6" }
+  },
+  "categories": {
+    "visual-engineering": { "model": "aiapi3/claude-sonnet-4-6", "variant": "standard" },
+    "ultrabrain": { "model": "aiapi3/claude-opus-4-6", "variant": "standard" },
+    "deep": { "model": "aiapi3/claude-opus-4-6", "variant": "standard" },
+    "artistry": { "model": "aiapi3/claude-opus-4-6", "variant": "standard" },
+    "quick": { "model": "aiapi3/claude-sonnet-4-6" },
+    "unspecified-low": { "model": "aiapi3/claude-sonnet-4-6" },
+    "unspecified-high": { "model": "aiapi3/claude-opus-4-6" },
+    "writing": { "model": "aiapi3/claude-sonnet-4-6" }
+  }
+}</code></pre>
+
+
+        </div>
+
+        <div class="alert-box warning glass">
+            <h4>⚡ 性能提示</h4>
+            <p>• Ultrawork Mode 会消耗更多 Token，建议在复杂任务时使用</p>
+            <p>• 后台智能体并行工作，可能需要等待几秒到几分钟</p>
+            <p>• 使用 <code>/init-deep</code> 可以大幅减少 Token 消耗并提升理解力</p>
+        </div>
+    </main>
+
+    <footer>
+        <p>© 2026版权所有 扶九API | Sisyphus 进阶指南</p>
+        <p style="margin-top: 0.5rem;">
+            QQ: <a href="tencent://message/?uin=2306309941&Site=扶九API&Menu=yes">2306309941</a> |
+            <a href="https://fujiuapi.com/console/topup" target="_blank">购买/充值链接</a>
+        </p>
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VSCode Copilot 无限系统 - 使用教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #7c83ff;
+            --primary-dark: #5f66e6;
+            --secondary-color: #a78bfa;
+            --accent-color: #06b6d4;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --bg-dark: #f8fafc;
+            --bg-card: rgba(255, 255, 255, 0.75);
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --gradient-1: linear-gradient(135deg, #a78bfa 0%, #818cf8 100%);
+            --gradient-2: linear-gradient(135deg, #e9d5ff 0%, #c7d2fe 100%);
+            --gradient-3: linear-gradient(135deg, #bae6fd 0%, #99f6e4 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            line-height: 1.8;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(165deg, #faf5ff 0%, #f0f9ff 30%, #fdf4ff 60%, #f0fdfa 100%),
+                linear-gradient(rgba(124, 131, 255, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(124, 131, 255, 0.08) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            z-index: -2;
+        }
+
+        .bg-orb {
+            position: fixed;
+            width: 520px;
+            height: 520px;
+            border-radius: 50%;
+            filter: blur(50px);
+            z-index: -1;
+            opacity: 0.6;
+            animation: float 18s ease-in-out infinite;
+        }
+
+        .bg-orb.primary {
+            background: radial-gradient(circle, rgba(167, 139, 250, 0.35) 0%, transparent 65%);
+            top: -220px;
+            right: -180px;
+        }
+
+        .bg-orb.accent {
+            background: radial-gradient(circle, rgba(6, 182, 212, 0.28) 0%, transparent 65%);
+            bottom: -200px;
+            left: -160px;
+            animation-duration: 22s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(50px, 50px); }
+        }
+
+        /* 导航栏 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(18px);
+            padding: 1rem 5%;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(124, 131, 255, 0.15);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .back-btn {
+            padding: 0.6rem 1.5rem;
+            background: rgba(124, 131, 255, 0.15);
+            color: var(--primary-color);
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 1px solid rgba(124, 131, 255, 0.35);
+        }
+
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.2);
+            background: rgba(124, 131, 255, 0.25);
+        }
+
+        /* 主要内容 */
+        .main-content {
+            padding: 120px 5% 80px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 作者信息卡片 */
+        .author-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(124, 131, 255, 0.2);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.12);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .author-avatar {
+            width: 80px;
+            height: 80px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+        }
+
+        .author-info h2 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .author-info p {
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .author-contact {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .contact-btn {
+            padding: 0.5rem 1rem;
+            background: rgba(124, 131, 255, 0.15);
+            border: 1px solid rgba(124, 131, 255, 0.35);
+            color: var(--primary-color);
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .contact-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* 视频区域 */
+        .video-section {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(124, 131, 255, 0.2);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.12);
+        }
+
+        .video-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .video-card {
+            background: rgba(255, 255, 255, 0.65);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(124, 131, 255, 0.18);
+            transition: all 0.3s;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 10px 24px rgba(99, 102, 241, 0.08);
+        }
+
+        .video-card:last-child {
+            margin-bottom: 0;
+        }
+
+        .video-card:hover {
+            border-color: rgba(124, 131, 255, 0.4);
+            transform: translateY(-3px);
+        }
+
+        .video-card h4 {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .video-card a {
+            color: var(--primary-color);
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .video-card a:hover {
+            text-decoration: underline;
+        }
+
+        /* 适用范围 */
+        .scope-section {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(124, 131, 255, 0.2);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.12);
+        }
+
+        .scope-section h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .scope-list {
+            list-style: none;
+        }
+
+        .scope-list li {
+            padding: 1rem 0;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .scope-list li::before {
+            content: '🎉';
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        /* 步骤卡片 */
+        .step-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(124, 131, 255, 0.2);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.12);
+            position: relative;
+        }
+
+        .step-number {
+            position: absolute;
+            top: -20px;
+            left: 2rem;
+            width: 50px;
+            height: 50px;
+            background: var(--gradient-1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.25);
+            color: white;
+        }
+
+        .step-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .step-content {
+            line-height: 1.9;
+        }
+
+        .step-content p {
+            margin-bottom: 1rem;
+        }
+
+        /* 代码块 */
+        .code-block {
+            background: rgba(255, 255, 255, 0.65);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            border: 1px solid rgba(124, 131, 255, 0.18);
+            box-shadow: 0 10px 24px rgba(99, 102, 241, 0.08);
+        }
+
+        .code-block code {
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.95rem;
+            color: var(--primary-color);
+            line-height: 1.6;
+            white-space: pre;
+            display: block;
+        }
+
+        /* 警告框 */
+        .alert-box {
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 1.5rem 0;
+            border-left: 4px solid;
+        }
+
+        .alert-box.warning {
+            background: rgba(245, 158, 11, 0.12);
+            border-color: var(--warning-color);
+        }
+
+        .alert-box.error {
+            background: rgba(239, 68, 68, 0.12);
+            border-color: var(--danger-color);
+        }
+
+        .alert-box.info {
+            background: rgba(6, 182, 212, 0.12);
+            border-color: var(--accent-color);
+        }
+
+        .alert-box.success {
+            background: rgba(16, 185, 129, 0.12);
+            border-color: var(--success-color);
+        }
+
+        .alert-box h4 {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        /* 提示卡片 */
+        .tip-card {
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid rgba(245, 158, 11, 0.35);
+            backdrop-filter: blur(14px);
+        }
+
+        .tip-card h4 {
+            color: var(--warning-color);
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* 计费说明 */
+        .pricing-section {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin-bottom: 3rem;
+            border: 1px solid rgba(124, 131, 255, 0.2);
+            backdrop-filter: blur(18px);
+            box-shadow: 0 12px 30px rgba(99, 102, 241, 0.12);
+        }
+
+        .pricing-section h3 {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .pricing-card {
+            background: rgba(255, 255, 255, 0.65);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(124, 131, 255, 0.18);
+            box-shadow: 0 10px 24px rgba(99, 102, 241, 0.08);
+        }
+
+        .pricing-card h4 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pricing-card p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        /* CTA 区域 */
+        .cta-section {
+            text-align: center;
+            padding: 3rem;
+            background: var(--gradient-1);
+            border-radius: 20px;
+            margin-top: 3rem;
+            color: white;
+            box-shadow: 0 18px 36px rgba(99, 102, 241, 0.2);
+        }
+
+        .cta-section h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* 页脚 */
+        footer {
+            padding: 2rem 5%;
+            text-align: center;
+            border-top: 1px solid rgba(124, 131, 255, 0.15);
+            color: var(--text-secondary);
+            margin-top: 4rem;
+        }
+
+        /* 响应式 */
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 100px 5% 60px;
+            }
+
+            .step-number {
+                left: 1rem;
+            }
+
+            .step-card {
+                padding: 2rem 1.5rem 1.5rem;
+            }
+
+            .author-card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .author-contact {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 背景装饰 -->
+    <div class="bg-orb primary"></div>
+    <div class="bg-orb accent"></div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">🚀 无限系统教程</div>
+            <a href="index.html" class="back-btn">← 返回首页</a>
+        </div>
+    </nav>
+
+    <!-- 主要内容 -->
+    <main class="main-content">
+        <!-- 作者信息 -->
+        <div class="author-card">
+            <div class="author-avatar">👨‍💻</div>
+            <div class="author-info">
+                <h2>作者介绍</h2>
+                <p><strong>QQ:</strong> 2306309941</p>
+                <p><strong>身份:</strong> 计算机科学博士</p>
+                <div class="author-contact">
+                    <a href="tencent://message/?uin=2306309941&Site=扶九API&Menu=yes" class="contact-btn">🐧 QQ联系</a>
+                    <a href="https://fujiuapi.com/console/topup" target="_blank" class="contact-btn">🛒 购买服务</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 视频教程 -->
+        <div class="video-section">
+            <h3>📹 视频教程</h3>
+            
+            <div class="video-card">
+                <h4>🎬 优酷教程</h4>
+                <a href="https://v.youku.com/v_show/id_XNjUxMDE3NzcwOA==.html" target="_blank">https://v.youku.com/v_show/id_XNjUxMDE3NzcwOA==.html</a>
+            </div>
+        </div>
+
+        <!-- 适用范围 -->
+        <div class="scope-section">
+            <h3>✨ 适用范围</h3>
+            <ul class="scope-list">
+                <li>在 VS Code 中实现无限的 OPUS、GPT、Claude、Gemini Pro 等模型</li>
+                <li>🎉🎉🎉 畅快使用 OPUS 75美元/100万字模型和 GPT、Claude、Gemini Pro 等，几乎免费 🎉</li>
+            </ul>
+        </div>
+
+        <!-- 步骤 1 -->
+        <div class="step-card">
+            <div class="step-number">1</div>
+            <h3>准备工作：打开 VS Code 并登录</h3>
+            <div class="step-content">
+                <p>1. 打开 VS Code 并登录，需要有一个 <strong>Copilot Pro 会员账号</strong>。</p>
+                <p>2. 登录你的账号（按你所在平台/插件的要求完成授权）</p>
+                
+                <div class="alert-box info">
+                    <h4>💡 重要提示</h4>
+                    <p>只有 <strong>Copilot Pro 账号</strong>才会出现高级请求功能，官网订阅价是 73.5 元/月（可以联系我们订阅）</p>
+                </div>
+
+                <div class="tip-card">
+                    <h4>🔔 提示</h4>
+                    <p>如果您还没有 Copilot Pro 账号，可以通过我们的购买链接获取：https://fujiuapi.com/console/topup</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 步骤 2 -->
+        <div class="step-card">
+            <div class="step-number">2</div>
+            <h3>配置 MCP：打开用户配置</h3>
+            <div class="step-content">
+                <p><strong>第一步：打开命令面板</strong></p>
+                <ul>
+                    <li>Windows/Linux: <code>Ctrl + Shift + P</code></li>
+                    <li>macOS: <code>Cmd + Shift + P</code></li>
+                </ul>
+
+                <p><strong>第二步：搜索并打开配置</strong></p>
+                <ol>
+                    <li>搜索 <code>mcp</code></li>
+                    <li>选择 <strong>"用户配置 / User Configuration"</strong>（名称可能略有差异，以界面为准）</li>
+                    <li>打开并编辑 <code>mcp.json</code></li>
+                </ol>
+
+                <p><strong>第三步：输入配置代码</strong></p>
+                <div class="code-block"><code>{
+  "servers": {
+    "mcp-ai-forever": {
+      "command": "uvx",
+      "args": [
+        "mcp-ai-forever@latest"
+      ],
+      "autoApprove": [
+        "interactive_feedback"
+      ]
+    }
+  }
+}</code></div>
+
+                <div class="alert-box error">
+                    <h4>⚠️ 第一次安装会出现缺少 uvx 错误</h4>
+                    <p>右下角会弹出错误提示，点击后会进入如下网址：</p>
+                    <a href="https://docs.astral.sh/uv/getting-started/installation/" target="_blank" style="color: var(--accent-color);">https://docs.astral.sh/uv/getting-started/installation/</a>
+                </div>
+
+                <div class="tip-card">
+                    <h4>🔔 网络提示</h4>
+                    <p>网络可能比较慢，需要多下载几次，请耐心等待。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 步骤 2.5 -->
+        <div class="step-card">
+            <div class="step-number">2.5</div>
+            <h3>补充设置：配置 VSCode 设置</h3>
+            <div class="step-content">
+                <p><strong>如果没有出现 Claude Code，需要进行以下设置：</strong></p>
+
+                <p><strong>第一步：打开设置</strong></p>
+                <ol>
+                    <li>点击左下角的 <strong>齿轮图标</strong> (设置)</li>
+                    <li>搜索 <code>setting</code></li>
+                    <li>选择 <strong>"打开用户设置(JSON)"</strong></li>
+                </ol>
+
+                <p><strong>第二步：替换配置</strong></p>
+                <p>将以下配置复制并粘贴到你的 <code>settings.json</code> 文件中：</p>
+
+                <div class="code-block"><code>{
+    "editor.formatOnSave": true,
+    "http.proxy": "http://127.0.0.1:7897",
+    "editor.fontSize": 16,
+    "editor.fontLigatures": false,
+    "[dart]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true,
+        "editor.rulers": [
+            80
+        ],
+        "editor.selectionHighlight": false,
+        "editor.suggestSelection": "first",
+        "editor.tabCompletion": "onlySnippets",
+        "editor.wordBasedSuggestions": "off"
+    },
+    "git.openRepositoryInParentFolders": "never",
+    "chat.mcp.gallery.enabled": true,
+    "css.format.enable": false,
+    "github.copilot.nextEditSuggestions.enabled": true,
+    "chat.tools.global.autoApprove": true,
+    "chat.tools.terminal.autoApprove": {
+        "rm": false,
+        "sudo": false,
+        "curl": true
+    },
+    "explorer.confirmDelete": false,
+    "github.copilot.enable": {
+        "*": true,
+        "plaintext": false,
+        "markdown": true,
+        "scminput": false
+    },
+    "chat.mcp.serverSampling": {},
+    "chat.mcp.discovery.enabled": {
+        "claude-desktop": true
+    },
+    "chat.agent.maxRequests": 250000000000,
+    "workbench.editor.pinnedTabsOnSeparateRow": true,
+    "chat.instructionsFilesLocations": {
+        ".github/prompts": true
+    },
+    "remote.extensionKind": {
+        "GitHub.copilot": [
+            "ui"
+        ],
+        "GitHub.copilot-chat": [
+            "ui"
+        ],
+        "pub.name": [
+            "ui"
+        ]
+    }
+}</code></div>
+
+                <div class="alert-box info">
+                    <h4>💡 重要提示</h4>
+                    <p>这个配置启用了 MCP 服务器发现、自动批准工具、以及 Copilot 相关设置。如果你的代理端口不是 7897，请修改 <code>http.proxy</code> 配置。</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 步骤 3 -->
+        <div class="step-card">
+            <div class="step-number">3</div>
+            <h3>开始使用 VSCode</h3>
+            <div class="step-content">
+                <p><strong>第一步：打开 Copilot 聊天</strong></p>
+                <p>在聊天输入：</p>
+                <div class="code-block">
+<code>和 mcp 工具 ai forever 交互，不要设置超时</code>
+                </div>
+
+                <p><strong>第二步：自动打开控制页面</strong></p>
+                <p>网页会自动打开一个页面</p>
+
+                <div class="alert-box success">
+                    <h4>🎉 恭喜启动成功！</h4>
+                    <p>账号请联系管理员 QQ: 2306309941 获取</p>
+                </div>
+
+                <div class="tip-card">
+                    <h4>🌿 界面优化建议</h4>
+                    <p>设置水平布局，界面会更美观！</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 步骤 4：计费说明 -->
+        <div class="step-card">
+            <div class="step-number">4</div>
+            <h3>计费说明</h3>
+            <div class="step-content">
+                <p><strong>原理：</strong>这个页面接管控制 VSCode 之后不消耗高级流量，免费实现无限使用。</p>
+
+                <div class="pricing-section">
+                    <h3>💰 计费详情</h3>
+                    <div class="pricing-grid">
+                        <div class="pricing-card">
+                            <h4>1️⃣ 启动计费</h4>
+                            <p>每次提问启动 ♾️ 无限工具那一次消耗流量 <strong>0.3%</strong>，只计费一次，后续通过本工具不计费</p>
+                        </div>
+
+                        <div class="pricing-card">
+                            <h4>2️⃣ OPUS 模型</h4>
+                            <p>OPUS 模型消耗 <strong>1%</strong>，一般普通账号不支持，一个月能无限够用，别的模型无限够用</p>
+                        </div>
+
+                        <div class="pricing-card">
+                            <h4>3️⃣ 使用建议</h4>
+                            <p><strong>不要频繁开关</strong>和直接通过聊天框来操作，这样的话会一下就消耗光的</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="cta-section">
+            <h2>🚀 准备好开始了吗？</h2>
+            <p>立即购买并联系我们获取账号和技术支持</p>
+            <div class="cta-buttons">
+                <a href="https://fujiuapi.com/console/topup" target="_blank" style="background: white; color: var(--primary-color); padding: 1rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 600;">
+                    🛒 立即购买
+                </a>
+                <a href="tencent://message/?uin=2306309941&Site=扶九API&Menu=yes" style="background: #12B7F5; color: white; padding: 1rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 600;">
+                    🐧 QQ咨询
+                </a>
+                <a href="index.html" style="background: rgba(255,255,255,0.2); color: white; padding: 1rem 2rem; border-radius: 12px; text-decoration: none; font-weight: 600; border: 2px solid white;">
+                    ← 返回首页
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer>
+        <p>© 2026 扶九API | VSCode Copilot 无限系统教程</p>
+        <p style="margin-top: 0.5rem;">QQ: 2306309941 | 让 AI 赋能每一位开发者</p>
+    </footer>
+</body>
+</html>

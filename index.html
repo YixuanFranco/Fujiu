@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="扶九API-全球领先的主流AI大模型API供应商！，包括 VSCode Copilot 无限版和 Claude Opus 4.6 API Key">
+    <meta name="keywords" content="扶九API,API接口,API中转站,API KEY,大模型接口网关,API聚合,大模型API,AI API 技术接入平台,api中转站,统一API接口平台,AIopilot,Claude,编程助手,VSCode,API Key">
+    <title>扶九API-全球领先的主流AI大模型API供应商！</title>
+    <link rel="stylesheet" href="css/style.css?v=20260303-0010">
+</head>
+
+<body>
+    <!-- 背景动画 -->
+    <div class="bg-animation" aria-hidden="true"></div>
+    <div class="bg-orb bg-orb-1" aria-hidden="true"></div>
+    <div class="bg-orb bg-orb-2" aria-hidden="true"></div>
+    <div class="bg-orb-3" aria-hidden="true"></div>
+
+    <!-- 导航栏 -->
+    <nav class="navbar" role="navigation">
+        <div class="nav-container">
+            <div class="logo">
+                <img src="img/logo.svg" alt="扶九API Logo" class="logo-img">
+                <span class="logo-text">扶九API</span>
+            </div>
+            <div class="nav-right">
+                <a href="tencent://message/?uin=2306309941&Site=扶九API&Menu=yes" class="qq-contact"
+                    aria-label="联系 QQ 2306309941">
+                    🐧 QQ:2306309941
+                </a>
+                <a href="javascript:void(0)" class="qq-contact wechat-contact" role="button"
+                    onclick="openWechatQR()" aria-label="企业微信扫码咨询">
+                    💚 企业微信
+                </a>
+                <ul class="nav-links" role="menubar">
+                    <li role="none" class="has-submenu">
+                        <a href="#" role="menuitem" aria-haspopup="true">使用教程</a>
+                        <ul class="submenu" role="menu">
+                            <li role="none"><a href="opencode-tutorial.html?v=2" role="menuitem">OpenCode 扶九API教程</a></li>
+                            <li role="none"><a href="cursor-tutorial.html" role="menuitem">Cursor 专版教程</a></li>
+                            <li role="none"><a href="claude-install-tutorial.html" role="menuitem">Claude Code 安装参考</a></li>
+                            <li role="none"><a href="ultraworker-tutorial-v2.html" role="menuitem">Sisyphus 进阶指南</a></li>
+                        </ul>
+                    </li>
+                    <li role="none"><a href="#contact" role="menuitem">联系我们</a></li>
+                </ul>
+                <button class="mobile-menu-btn" aria-label="切换菜单" aria-expanded="false" aria-controls="navigation">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero 区域 -->
+    <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-content">
+
+            <h1 id="hero-title" class="hero-title">扶九API 让算力不再束缚！</h1>
+        </div>
+    </section>
+
+    <!-- 信任背书区域 -->
+    <section class="trust-section" aria-labelledby="trust-title">
+
+        <div class="trust-grid">
+            <div class="trust-card">
+                <div class="trust-icon">🧭</div>
+                <h3>2026 年 1 月少数正版 Claude 方案</h3>
+                <p>提供正版可用方案，避免来源不清导致的稳定性与封禁风险。</p>
+            </div>
+            <div class="trust-card">
+                <div class="trust-icon">💰</div>
+                <h3>额度对比更有优势</h3>
+                <p>淘宝常见是 1 元 : 1 美元正版额度;我们是 80 元 : 1000 美元正版额度。</p>
+            </div>
+            <div class="trust-card">
+                <div class="trust-icon">🔌</div>
+                <h3>原生支持完整生态</h3>
+                <p>支持 Claude 全协议的软件接入，同时可用技能（Skills）与 MCP 能力。</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 降智问题独立说明 -->
+    <section class="degrade-section" aria-labelledby="degrade-title">
+        <div class="degrade-card">
+            <h2 id="degrade-title">明确解释“降智”问题</h2>
+            <p>在目前的AI圈子(特别是使用ChatGPT、Claude等海外服务时)，"IP不对导致被降智"是一个真实且非常普遍的现象。所谓的"降智"，通常指服务商的风控系统检测到你的网络环境(IP地址)存在风险，因此在不直接封号的情况下，悄悄限制你的账号权限或模型能力。</p>
+        </div>
+    </section>
+
+    <!-- 产品区域 -->
+    <section class="products-section" id="products" aria-labelledby="products-title">
+        <div class="section-title">
+            <h2 id="products-title">选择适合你的 AI 模型套餐</h2>
+            <p>两款产品各有特色，满足不同开发需求</p>
+        </div>
+
+        <div class="products-grid">
+            <!-- 套餐1: 日卡 -->
+            <article class="product-card" aria-labelledby="product-2-title">
+                <div class="product-icon">☀️</div>
+                <h3 id="product-2-title">日卡套餐</h3>
+                <span class="badge">⚡ 快速</span>
+                <p class="description">
+                    日卡套餐，适合短期项目或临时需求。
+                </p>
+
+                <div class="price-section">
+                    <div class="price-main">
+                        <span class="price-amount">¥18</span>
+                        <span class="price-unit">/ 日</span>
+                    </div>
+                    <div class="price-breakdown">
+                        <p>• <strong>120 美元</strong> API 额度</p>
+                    </div>
+                </div>
+
+                <ul class="features-list">
+                    <li><strong>120 美元</strong> API 额度</li>
+                    <li>Claude Opus 4.6 模型</li>
+                    <li>200K 上下文窗口</li>
+                    <li>多平台支持</li>
+                </ul>
+
+                <button class="cta-button secondary" onclick="openPayment('daily')">🛒 立即购买</button>
+            </article>
+
+            <!-- 套餐3: 半月卡 -->
+            <article class="product-card" aria-labelledby="product-3-title">
+                <div class="product-icon">📅</div>
+                <h3 id="product-3-title">半月卡套餐</h3>
+                <span class="badge">🎯 热门</span>
+                <p class="description">
+                    半月卡套餐，适合中短期项目开发。
+                </p>
+
+                <div class="price-section">
+                    <div class="price-main">
+                        <span class="price-amount">¥98</span>
+                        <span class="price-unit">/ 半月</span>
+                    </div>
+                    <div class="price-breakdown">
+                        <p>• <strong>800 美元</strong> API 额度</p>
+                    </div>
+                </div>
+
+                <ul class="features-list">
+                    <li><strong>800 美元</strong> API 额度</li>
+                    <li>Claude Opus 4.6 模型</li>
+                    <li>200K 上下文窗口</li>
+                    <li>多平台支持</li>
+                </ul>
+
+                <button class="cta-button secondary" onclick="openPayment('weekly')">🛒 立即购买</button>
+            </article>
+
+            <!-- 套餐4: 月卡 -->
+            <article class="product-card" aria-labelledby="product-4-title">
+                <div class="product-icon">🤖</div>
+                <h3 id="product-4-title">月卡套餐</h3>
+                <span class="badge">💎 推荐</span>
+                <p class="description">
+                    月卡套餐，适合长期开发和团队使用。
+                </p>
+
+                <div class="price-section">
+                    <div class="price-main">
+                        <span class="price-amount">¥298</span>
+                        <span class="price-unit">/ 月</span>
+                    </div>
+                    <div class="price-breakdown">
+                        <p>• <strong>3000 美元</strong> API 额度</p>
+                    </div>
+                </div>
+
+                <ul class="features-list">
+                    <li><strong>3000 美元</strong> API 额度</li>
+                    <li>Claude Opus 4.6 模型</li>
+                    <li>200K 上下文窗口</li>
+                    <li>多平台支持</li>
+                    <li>优先技术支持</li>
+                </ul>
+
+                <button class="cta-button secondary" onclick="openPayment('monthly')">🛒 立即购买</button>
+                <a href="opencode-tutorial.html?v=2" class="cta-button outline outline-accent">📖 OpenCode 扶九API教程</a>
+            </article>
+
+            <!-- 套餐5: 大额卡 -->
+            <article class="product-card" aria-labelledby="product-5-title">
+                <div class="product-icon">💰</div>
+                <h3 id="product-5-title">大额套餐</h3>
+                <span class="badge">🦞 龙虾铂金套餐</span>
+                <p class="description">
+                    大额套餐，适合企业和大型项目。
+                </p>
+
+                <div class="price-section">
+                    <div class="price-main">
+                        <span class="price-amount">¥498</span>
+                    </div>
+                    <div class="price-breakdown">
+                        <p>• <strong>6000 美元</strong> API 额度</p>
+                    </div>
+                </div>
+
+                <ul class="features-list">
+                    <li><strong>6000 美元</strong> API 额度</li>
+                    <li>Claude Opus 4.6 模型</li>
+                    <li>200K 上下文窗口</li>
+                    <li>多平台支持</li>
+                    <li>VIP 技术支持</li>
+                    <li>专属客服</li>
+                </ul>
+
+                <button class="cta-button secondary" onclick="openPayment('large')">🛒 立即购买</button>
+                <a href="opencode-tutorial.html?v=2" class="cta-button outline outline-accent">📖 OpenCode 扶九API教程</a>
+            </article>
+
+            <!-- 套餐6: 龙虾套餐 -->
+            <article class="product-card" aria-labelledby="product-6-title">
+                <div class="product-icon">🦞</div>
+                <h3 id="product-6-title">龙虾套餐</h3>
+                <span class="badge">👑 至尊</span>
+                <p class="description">
+                    龙虾套餐，顶级配置，无限可能。
+                </p>
+
+                <div class="price-section">
+                    <div class="price-main">
+                        <span class="price-amount">¥998</span>
+                    </div>
+                    <div class="price-breakdown">
+                        <p>• <strong>15000 美元</strong> API 额度</p>
+                    </div>
+                </div>
+
+                <ul class="features-list">
+                    <li><strong>15000 美元</strong> API 额度</li>
+                    <li>Claude Opus 4.6 模型</li>
+                    <li>200K 上下文窗口</li>
+                    <li>多平台支持</li>
+                    <li>至尊 VIP 技术支持</li>
+                    <li>专属客服团队</li>
+                    <li>定制化服务</li>
+                </ul>
+
+                <button class="cta-button secondary" onclick="openPayment('lobster')">🛒 立即购买</button>
+                <a href="opencode-tutorial.html?v=2" class="cta-button outline outline-accent">📖 OpenCode 扶九API教程</a>
+                <a href="cursor-tutorial.html" class="cta-button outline outline-accent">🧭 Cursor 专版</a>
+            </article>
+            
+            
+            <!-- 套餐7: 合伙人套餐 -->
+             <!--<article class="product-card" aria-labelledby="product-7-title">
+                <div class="product-icon">👨‍⚖️</div>
+                <h3 id="product-7-title">扶九API合伙人</h3>
+                <span class="badge">💰 一人公司</span>
+                <p class="description">
+                    扶九API合伙人，AI浪潮，共创财富。
+                </p>
+
+                <div class="price-section">
+                    <div class="price-main">
+                        <span class="price-amount">¥2500+¥500技术服务费</span>
+                    </div>
+                    <div class="price-breakdown">
+                        <p>• <strong>50000 美元</strong> API 额度</p>
+                    </div>
+                </div>
+
+                <ul class="features-list">
+                    <li><strong>50000 美元</strong> API 额度</li>
+                    <li>贴牌系统 成交价拿tokens</li>
+                    <li>市场价1元1刀，拿货成本1元20刀，利润率2000%</li>
+                    <li>独立的支付系统，钱直接到你商户</li>
+                    <li>后续无任何费用，只需进货成本</li>
+                    <li>至尊 VIP 技术支持</li>
+                    <li>专属客服团队</li>
+                    <li>定制化服务</li>
+                </ul>
+
+                <button class="cta-button secondary" onclick="openPayment('lobster')">🛒 立即购买</button>
+                <a href="opencode-tutorial.html?v=2" class="cta-button outline outline-accent">📖 OpenCode 扶九API教程</a>
+                <a href="cursor-tutorial.html" class="cta-button outline outline-accent">🧭 Cursor 专版</a>
+            </article>-->
+        </div>
+    </section>
+    <!-- 支付弹窗 -->
+    <div id="paymentModal" class="payment-modal">
+        <div class="payment-modal-content">
+            <span class="payment-close" onclick="closePayment()">&times;</span>
+            <h2 id="paymentTitle">扫码支付</h2>
+            <div id="paymentInfo" class="payment-info"></div>
+            <div id="qrcodeContainer" class="qrcode-container">
+                <div class="loading">生成支付二维码中...</div>
+            </div>
+            <div id="paymentStatus" class="payment-status"></div>
+            <p class="payment-tip">请使用微信扫描二维码完成支付</p>
+        </div>
+    </div>
+
+    <!-- 企业微信二维码弹窗 -->
+    <div id="wechatModal" class="payment-modal">
+        <div class="payment-modal-content" style="max-width: 420px;">
+            <span class="payment-close" onclick="closeWechatQR()">&times;</span>
+            <h2>💚 企业微信扫码咨询</h2>
+            <img src="img/wechat-qr.png" alt="企业微信二维码" class="qr-modal-img">
+            <p style="text-align:center;margin-top:1rem;color:var(--text-secondary);">微信扫码添加客服，获取套餐与技术支持</p>
+            <p style="text-align:center;margin-top:0.5rem;">QQ：<a href="tencent://message/?uin=2306309941&Site=扶九API&Menu=yes">2306309941</a></p>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer id="contact">
+        <p>© 2026 扶九API. 版权所有<br>扶九API-全球领先的主流AI大模型API供应商！</p>
+        <div class="footer-links">
+            QQ <a href="tencent://message/?uin=2306309941&Site=扶九API&Menu=yes">2306309941</a> |
+            <a href="javascript:void(0)" onclick="openWechatQR()">💚 企业微信扫码</a> |
+            购买/充值: <a href="https://fujiuapi.com/console/topup" target="_blank" rel="noopener">https://fujiuapi.com/console/topup</a> |
+            <a href="tutorial.html">使用教程</a> |
+            <a href="claude-install-tutorial.html">Claude Code 安装参考</a>
+        </div>
+    </footer>
+
+    <script src="js/main.js?v=20260303-0010"></script>
+    <script src="js/payment.js?v=20260303-0010"></script>
+</body>
+
+</html>

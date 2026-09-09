@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claude Code 安装教程</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #7c83ff;
+            --primary-dark: #5f66e6;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text: #1e293b;
+            --muted: #64748b;
+            --bg: #f8fafc;
+            --card: rgba(255, 255, 255, 0.78);
+            --line: rgba(124, 131, 255, 0.2);
+            --grad: linear-gradient(135deg, #a78bfa 0%, #818cf8 100%);
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            color: var(--text);
+            background: var(--bg);
+            line-height: 1.75;
+            min-height: 100vh;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            z-index: -2;
+            background-image:
+                linear-gradient(165deg, #faf5ff 0%, #f0f9ff 40%, #f8fafc 100%),
+                linear-gradient(rgba(124, 131, 255, 0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(124, 131, 255, 0.07) 1px, transparent 1px);
+            background-size: 100% 100%, 38px 38px, 38px 38px;
+        }
+        .orb { position: fixed; border-radius: 50%; filter: blur(56px); z-index: -1; opacity: .6; }
+        .orb.one { width: 520px; height: 520px; top: -220px; right: -180px; background: rgba(167, 139, 250, .35); }
+        .orb.two { width: 420px; height: 420px; left: -120px; bottom: -180px; background: rgba(6, 182, 212, .25); }
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+            padding: 1rem 5%; background: rgba(255, 255, 255, .68);
+            backdrop-filter: blur(14px); border-bottom: 1px solid var(--line);
+        }
+        .nav-wrap { max-width: 1080px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.1rem; font-weight: 700; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .back-btn {
+            text-decoration: none; color: var(--primary); background: rgba(124,131,255,.12);
+            border: 1px solid rgba(124,131,255,.35); border-radius: 8px; padding: .45rem .9rem; font-weight: 600;
+        }
+        .main { max-width: 980px; margin: 0 auto; padding: 102px 5% 70px; }
+        .hero, .card {
+            border: 1px solid var(--line); background: var(--card); backdrop-filter: blur(14px);
+            box-shadow: 0 12px 28px rgba(99,102,241,.09);
+        }
+        .hero { border-radius: 18px; padding: 2rem; text-align: center; }
+        .hero .tag { display: inline-block; margin-bottom: .7rem; padding: .3rem .7rem; border-radius: 999px; color: #fff; font-size: .82rem; font-weight: 700; background: var(--grad); }
+        .hero h1 { font-size: clamp(1.7rem, 3vw, 2.2rem); margin-bottom: .5rem; }
+        .hero p { color: var(--muted); }
+        .card { margin-top: 1rem; border-radius: 14px; padding: 1.3rem; }
+        .card h2 { font-size: 1.15rem; margin-bottom: .8rem; }
+        .card p, .card li { color: var(--muted); }
+        .card ul { padding-left: 1.1rem; }
+        .card li { margin: .35rem 0; }
+        .sub-title { margin-top: .7rem; margin-bottom: .45rem; font-weight: 700; color: var(--text); }
+        .code {
+            margin-top: .5rem; padding: .9rem; border-radius: 10px; overflow-x: auto;
+            border: 1px solid rgba(124,131,255,.25); background: rgba(255,255,255,.7);
+        }
+        .code code { white-space: pre; display: block; font-family: Menlo, Monaco, Consolas, monospace; color: var(--primary-dark); font-size: .92rem; line-height: 1.6; }
+        .tip { margin-top: .75rem; padding: .85rem; border-radius: 10px; border-left: 4px solid; }
+        .tip.info { background: rgba(6,182,212,.1); border-color: var(--accent); }
+        .tip.ok { background: rgba(16,185,129,.12); border-color: var(--success); }
+        .tip.warn { background: rgba(245,158,11,.12); border-color: var(--warning); }
+        .tip.err { background: rgba(239,68,68,.12); border-color: var(--danger); }
+        .links a { color: var(--primary-dark); text-decoration: none; border-bottom: 1px solid rgba(95,102,230,.35); }
+        .cta {
+            margin-top: 1.3rem; border-radius: 14px; padding: 1.5rem; text-align: center; color: #fff;
+            background: var(--grad); box-shadow: 0 16px 34px rgba(99,102,241,.2);
+        }
+        .cta-buttons { margin-top: 1rem; display: flex; justify-content: center; gap: .7rem; flex-wrap: wrap; }
+        .cta-buttons a { text-decoration: none; padding: .6rem 1rem; border-radius: 9px; font-weight: 600; }
+        .btn-light { background: #fff; color: var(--primary-dark); }
+        .btn-dark { background: rgba(255,255,255,.2); color: #fff; border: 1px solid rgba(255,255,255,.45); }
+        footer { padding: 2rem 5%; text-align: center; color: var(--muted); border-top: 1px solid var(--line); margin-top: 2.8rem; }
+    </style>
+</head>
+<body>
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <nav class="navbar">
+        <div class="nav-wrap">
+            <div class="logo">📦 Claude Code 安装教程</div>
+            <a href="index.html" class="back-btn">← 返回首页</a>
+        </div>
+    </nav>
+    <main class="main">
+        <section class="hero">
+            <span class="tag">官方安装参考</span>
+            <h1>Claude Code 一步安装与验证</h1>
+            <p>适用于 macOS、Linux、Windows。按步骤执行即可完成安装与登录。</p>
+        </section>
+        <section class="card links">
+            <h2>🚀 1. 安装 Claude Code（Node.js + npm）</h2>
+            <p class="sub-title">第一步：安装 Node.js</p>
+            <p>请先打开以下地址下载安装包并完成安装：</p>
+            <ul>
+                <li><a href="https://nodejs.cn/download/" target="_blank" rel="noopener">https://nodejs.cn/download/</a></li>
+            </ul>
+            <div class="tip info">建议安装 LTS 版本，安装完成后重开终端。</div>
+
+            <p class="sub-title">第二步：通过 npm 安装 Claude Code</p>
+            <div class="code"><code>npm install -g @anthropic-ai/claude-code</code></div>
+            <div class="tip warn">安装后如果提示命令不存在，请确认 Node.js 与 npm 已正确安装并加入 PATH。</div>
+            <p class="sub-title"># Claude Code 配置</p>
+            <p class="sub-title">## 环境变量</p>
+
+            <p><strong>macOS（当前终端临时生效）：</strong></p>
+            <div class="code"><code>export ANTHROPIC_AUTH_TOKEN=你的密钥
+export ANTHROPIC_BASE_URL="https://fujiuapi.com/"</code></div>
+
+            <p><strong>macOS（永久生效，写入 ~/.zshrc）：</strong></p>
+            <div class="code"><code>echo 'export ANTHROPIC_AUTH_TOKEN=你的密钥' >> ~/.zshrc
+echo 'export ANTHROPIC_BASE_URL="https://fujiuapi.com/"' >> ~/.zshrc
+source ~/.zshrc</code></div>
+
+            <p><strong>Windows：</strong></p>
+            <div class="code"><code>setx ANTHROPIC_AUTH_TOKEN "你的密钥"
+setx ANTHROPIC_BASE_URL "https://fujiuapi.com/"</code></div>
+
+            <p><strong>设置完成后启动一次 Claude Code：</strong></p>
+            <div class="code"><code>claude</code></div>
+        </section>
+        <section class="cta">
+            <h2>🎯 安装完就可以开始了</h2>
+            <p>返回首页继续看 OpenCode 教程，或直接开始实战。</p>
+            <div class="cta-buttons">
+                <a class="btn-light" href="index.html">返回首页</a>
+                <a class="btn-dark" href="opencode-tutorial.html?v=2">查看 OpenCode 教程</a>
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>© 2026版权所有 扶九API | Claude Code 安装教程</p>
+    </footer>
+</body>
+</html>

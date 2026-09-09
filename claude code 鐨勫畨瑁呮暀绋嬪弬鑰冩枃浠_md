@@ -1,0 +1,69 @@
+# Claude Code 安装教程参考
+
+> 适用场景：首次安装 Claude Code（macOS / Linux / Windows）。
+> 
+> 说明：以下命令基于 Claude Code 官方文档整理，实际以官方最新页面为准。
+
+## 1. 安装前准备
+
+- 保持网络可用
+- 建议内存 4GB 以上
+- Windows 建议先安装 Git for Windows
+
+## 2. 安装方式
+
+### 方式 A：官方脚本安装（推荐）
+
+#### macOS / Linux
+
+```bash
+curl -fsSL https://claude.ai/install.sh | bash
+```
+
+#### Windows PowerShell
+
+```powershell
+irm https://claude.ai/install.ps1 | iex
+```
+
+#### Windows CMD
+
+```bat
+curl -fsSL https://claude.ai/install.cmd -o install.cmd && install.cmd && del install.cmd
+```
+
+### 方式 B：npm 全局安装（备选）
+
+```bash
+npm install -g @anthropic-ai/claude-code
+```
+
+## 3. 首次登录与初始化
+
+```bash
+claude
+```
+
+首次运行后按提示完成账号登录即可。
+
+## 4. 验证安装是否成功
+
+```bash
+claude --version
+claude --help
+```
+
+如果都能正常输出版本号与帮助信息，说明安装成功。
+
+## 5. 常用后续命令
+
+```bash
+claude auth status
+claude update
+```
+
+## 6. 官方文档入口（建议收藏）
+
+- https://code.claude.com/docs/en/terminal-guide
+- https://docs.anthropic.com/en/docs/claude-code/setup
+- https://code.claude.com/docs/en/cli-reference
