@@ -1,37 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" width="96" height="96" role="img" aria-label="扶九API Logo">
-  <title>扶九API · 鲲鹏扶摇直上</title>
-  <defs>
-    <linearGradient id="fjGrad" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0%" stop-color="#6366f1"/>
-      <stop offset="48%" stop-color="#3b82f6"/>
-      <stop offset="100%" stop-color="#22d3ee"/>
-    </linearGradient>
-    <radialGradient id="fjGlow" cx="50%" cy="42%" r="65%">
-      <stop offset="0%" stop-color="#eff6ff"/>
-      <stop offset="100%" stop-color="#ffffff"/>
-    </radialGradient>
-  </defs>
-
-  <!-- 徽标底 -->
-  <circle cx="48" cy="48" r="46" fill="url(#fjGlow)"/>
-  <circle cx="48" cy="48" r="45.5" fill="none" stroke="url(#fjGrad)" stroke-width="4.5"/>
-
-  <!-- 鲲鹏扶摇直上：双翼 + 向上锋 -->
-  <g fill="none" stroke="url(#fjGrad)" stroke-width="6" stroke-linecap="round">
-    <!-- 左翼双羽 -->
-    <path d="M46 44 C 38 40, 30 32, 26 22"/>
-    <path d="M46 50 C 38 47, 30 43, 24 40"/>
-    <!-- 右翼双羽 -->
-    <path d="M50 44 C 58 40, 66 32, 70 22"/>
-    <path d="M50 50 C 58 47, 66 43, 72 40"/>
-    <!-- 升腾中轴 -->
-    <path d="M48 64 L48 34"/>
-  </g>
-  <!-- 鹏首 / 向上锋尖 -->
-  <path d="M41 35 L48 22 L55 35 Z" fill="url(#fjGrad)"/>
-
-  <!-- 底部扶摇气流 -->
-  <g stroke="url(#fjGrad)" stroke-width="4.5" stroke-linecap="round" opacity="0.55">
-    <path d="M38 70 q10 6 20 0" fill="none"/>
-  </g>
+  <title>扶九API · 大鹏金翅鸟徽标</title>
+  <!-- 扁平底色圆 -->
+  <circle cx="48" cy="48" r="45" fill="#0F766E"/>
+  <!-- 左翼（金翅） -->
+  <path d="M46 42 C36 38 25 31 15 21 L25 33 L19 34 L29 43 L24 45 L35 52 C40 49 43 47 46 46 Z" fill="#F0A93B"/>
+  <!-- 右翼（金翅） -->
+  <path d="M50 42 C60 38 71 31 81 21 L71 33 L77 34 L67 43 L72 45 L61 52 C56 49 53 47 50 46 Z" fill="#F0A93B"/>
+  <!-- 身体 -->
+  <path d="M48 23 L54 45 L48 77 L42 45 Z" fill="#FFFFFF"/>
+  <!-- 尾羽 -->
+  <path d="M45 62 L34 74 L45 69 Z" fill="#FFFFFF"/>
+  <path d="M51 62 L62 74 L51 69 Z" fill="#FFFFFF"/>
 </svg>
