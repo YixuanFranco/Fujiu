@@ -507,8 +507,8 @@ body::after {
 }
 
 .trust-card:hover {
-    transform: translateY(-6px);
     box-shadow: var(--shadow-lg);
+    border-color: var(--glass-shine);
 }
 
 .trust-icon {
@@ -633,7 +633,6 @@ body::after {
 }
 
 .product-card:hover {
-    transform: translateY(-8px);
     box-shadow: 0 20px 42px rgba(15, 118, 110, 0.18), 0 0 24px var(--card-glow, rgba(20, 184, 166, 0.18));
     border-color: var(--glass-shine);
 }
@@ -831,7 +830,7 @@ body::after {
 }
 
 .cta-button:hover {
-    transform: translateY(-3px);
+    filter: brightness(1.07);
     box-shadow: 0 15px 34px rgba(15, 118, 110, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.25);
 }
 
@@ -1346,7 +1345,7 @@ a.wechat-contact {
 }
 
 .hero-btn-primary:hover {
-    transform: translateY(-3px);
+    filter: brightness(1.08);
     box-shadow: 0 16px 34px rgba(234, 88, 12, 0.45);
     color: #ffffff;
 }
@@ -1365,7 +1364,7 @@ a.wechat-contact {
 }
 
 .hero-btn-ghost:hover {
-    transform: translateY(-3px);
+    filter: brightness(1.03);
     border-color: #14b8a6;
     color: #0f766e;
 }
