@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>联系我们 - 扶九API</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            min-height: 100vh;
+            background:
+                linear-gradient(145deg, #f0fdfa 0%, #fff7ed 55%, #f8fafc 100%);
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 32px 16px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid rgba(15, 118, 110, 0.18);
+            border-radius: 22px;
+            box-shadow: 0 20px 50px rgba(15, 118, 110, 0.14);
+            max-width: 420px;
+            width: 100%;
+            padding: 34px 30px;
+            text-align: center;
+        }
+        .brand { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 6px; }
+        .brand img { width: 44px; height: 44px; }
+        .brand span { font-size: 21px; font-weight: 800; color: #0f766e; letter-spacing: 1px; }
+        h1 { font-size: 19px; color: #134e4a; margin-bottom: 4px; }
+        .sub { color: #64748b; font-size: 13.5px; margin-bottom: 22px; }
+        .qr {
+            width: 240px; height: 240px;
+            border-radius: 14px;
+            border: 1px solid rgba(15, 118, 110, 0.2);
+            background: #fff;
+            display: block; margin: 0 auto 10px;
+        }
+        .qr-tip { font-size: 14px; color: #07c160; font-weight: 700; margin-bottom: 20px; }
+        .rows { text-align: left; border-top: 1px dashed rgba(15, 118, 110, 0.25); padding-top: 18px; margin-bottom: 20px; }
+        .row { display: flex; gap: 10px; align-items: baseline; margin-bottom: 10px; font-size: 14.5px; color: #475569; }
+        .row .k { color: #0f766e; font-weight: 800; white-space: nowrap; }
+        .row a { color: #0f766e; font-weight: 600; word-break: break-all; }
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #0f766e, #14b8a6);
+            color: #fff; text-decoration: none;
+            font-size: 15px; font-weight: 700;
+            padding: 12px 34px; border-radius: 12px;
+            box-shadow: 0 10px 24px rgba(15, 118, 110, 0.3);
+        }
+        .btn:hover { filter: brightness(1.06); }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="brand">
+            <img src="img/logo.svg" alt="扶九API">
+            <span>扶九API</span>
+        </div>
+        <h1>联系我们 · 联盟合作</h1>
+        <p class="sub">扫码添加企业微信客服，优惠信息与技术支持一站直达</p>
+
+        <img class="qr" src="img/wechat-qr.png" alt="扶九API企业微信二维码">
+        <p class="qr-tip">💚 微信扫码 · 添加企业微信客服</p>
+
+        <div class="rows">
+            <div class="row"><span class="k">🐧 QQ咨询</span><a href="tencent://message/?uin=2306309941&Site=扶九API&Menu=yes">2306309941</a></div>
+            <div class="row"><span class="k">🛒 购买充值</span><a href="https://fujiuapi.com/wallet" target="_blank" rel="noopener">fujiuapi.com/wallet</a></div>
+            <div class="row"><span class="k">📖 接入文档</span><a href="api-docs.html" target="_blank" rel="noopener">yixuan.li/Fujiu/api-docs.html</a></div>
+            <div class="row"><span class="k">🤝 加盟代理</span><span>请备注「加盟代理」，专属折扣与返佣政策</span></div>
+        </div>
+
+        <a class="btn" href="https://fujiuapi.com" target="_blank" rel="noopener">返回首页</a>
+    </div>
+</body>
+</html>
