@@ -13,7 +13,6 @@
                 linear-gradient(145deg, #f0fdfa 0%, #fff7ed 55%, #f8fafc 100%);
             color: #1f2937;
             display: flex;
-            align-items: center;
             justify-content: center;
             padding: 32px 16px;
         }
@@ -22,10 +21,11 @@
             border: 1px solid rgba(15, 118, 110, 0.18);
             border-radius: 22px;
             box-shadow: 0 20px 50px rgba(15, 118, 110, 0.14);
-            max-width: 420px;
+            max-width: 460px;
             width: 100%;
             padding: 34px 30px;
             text-align: center;
+            margin: auto;
         }
         .brand { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 6px; }
         .brand img { width: 44px; height: 44px; }
@@ -53,6 +53,18 @@
             box-shadow: 0 10px 24px rgba(15, 118, 110, 0.3);
         }
         .btn:hover { filter: brightness(1.06); }
+        .earn {
+            text-align: left;
+            background: linear-gradient(135deg, rgba(15, 118, 110, .07), rgba(240, 169, 59, .12));
+            border: 1px solid rgba(240, 169, 59, .4);
+            border-radius: 14px;
+            padding: 14px 16px;
+            margin-bottom: 20px;
+        }
+        .earn h2 { font-size: 15.5px; color: #b45309; margin-bottom: 8px; }
+        .earn p { font-size: 13.5px; color: #475569; line-height: 1.85; margin-bottom: 4px; }
+        .earn b { color: #0f766e; }
+        .earn .how { color: #92400e; font-weight: 700; }
     </style>
 </head>
 <body>
@@ -71,6 +83,14 @@
             <div class="row"><span class="k">🐧 QQ咨询</span><a href="tencent://message/?uin=2306309941&Site=扶九API&Menu=yes">2306309941</a></div>
             <div class="row"><span class="k">🛒 购买充值</span><a href="https://fujiuapi.com/wallet" target="_blank" rel="noopener">fujiuapi.com/wallet</a></div>
             <div class="row"><span class="k">🤝 加盟代理</span><span>请备注「加盟代理」，专属折扣与返佣政策</span></div>
+        </div>
+
+        <div class="earn">
+            <h2>🎉 躺赚计划 · 邀请返佣 2%</h2>
+            <p>把扶九API分享给朋友和粉丝，TA 的<b>每一笔消费你永久抽成 2%</b>——不是一次性，是 TA 用多久你赚多久。</p>
+            <p>🧋 TA 开月卡，你白捡一杯奶茶　🍲 TA 上无忧卡，你加个鸡腿</p>
+            <p>🚀 好友月烧 1 亿 token？你每月躺赚 ¥60。无门槛、无上限、永久有效。</p>
+            <p class="how">参与方式：登录 fujiuapi.com → 钱包 → 推荐计划 → 复制专属链接，发出去就开始数钱</p>
         </div>
 
         <a class="btn" href="https://fujiuapi.com" target="_blank" rel="noopener">返回首页</a>
