@@ -192,7 +192,7 @@
         <h2>📌 一、基础信息</h2>
         <div class="info-grid">
             <div class="k">API 地址</div>
-            <div class="v"><code>https://fujiuapi.com</code></div>
+            <div class="v"><code>https://fujiuapi.com</code> 或 <code>https://fujiuapi.com/v1</code></div>
             <div class="k">鉴权方式</div>
             <div class="v">HTTP Header <code>Authorization: Bearer &lt;API_KEY&gt;</code></div>
             <div class="k">兼容协议</div>
@@ -201,7 +201,8 @@
             <div class="v">JSON</div>
         </div>
         <div class="tip">
-            💡 <b>提示：</b>扶九API 完全兼容 OpenAI 协议，任何支持自定义 base_url 的客户端（如 OpenCode、Cursor、Claude Code、Dify、FastGPT 等）均可直接使用。
+            💡 <b>提示：</b>扶九API 完全兼容 OpenAI 协议，任何支持自定义 base_url 的客户端（如 OpenCode、Cursor、Claude Code、Dify、FastGPT 等）均可直接使用。<br>
+            🔧 <b>关于 API 地址：</b>部分客户端需要填 <code>https://fujiuapi.com</code>，部分需要填 <code>https://fujiuapi.com/v1</code>。如果一个报错，请换另一个试试。
         </div>
     </div>
 
@@ -286,6 +287,9 @@ Authorization: Bearer <span class="s">你的API_KEY</span>
     <!-- 四、代码示例 -->
     <div class="card">
         <h2>💻 四、代码示例</h2>
+        <div class="tip">
+            🔧 <b>base_url 填写说明：</b>以下示例中的 <code>base_url</code> / <code>baseURL</code> 可以填 <code>https://fujiuapi.com</code> 或 <code>https://fujiuapi.com/v1</code>，如果一个报错请换另一个。
+        </div>
 
         <h3>cURL</h3>
 <pre>curl https://fujiuapi.com/v1/chat/completions \
