@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="扶九API AI十关：输入通关口令解锁下一关，进度自动保存在你的浏览器里">
+    <title>扶九API - AI十关 · 口令解锁</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --accent: #f0a93b;
+            --accent-dark: #d98f1f;
+            --text: #1f2937;
+            --text-2: #4b5563;
+            --bg: #f8fafc;
+            --line: rgba(15, 118, 110, 0.18);
+            --grad: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+            --grad-warm: linear-gradient(135deg, #f0a93b 0%, #f59e0b 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.8;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(165deg, #f0fdfa 0%, #f8fafc 35%, #fffbeb 70%, #f0fdfa 100%),
+                linear-gradient(rgba(15, 118, 110, 0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 118, 110, 0.06) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            z-index: -2;
+        }
+
+        .bg-orb {
+            position: fixed;
+            width: 520px;
+            height: 520px;
+            border-radius: 50%;
+            filter: blur(50px);
+            z-index: -1;
+            opacity: 0.6;
+            animation: float 18s ease-in-out infinite;
+        }
+        .bg-orb.primary {
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.35) 0%, transparent 65%);
+            top: -220px; right: -180px;
+        }
+        .bg-orb.warm {
+            background: radial-gradient(circle, rgba(240, 169, 59, 0.28) 0%, transparent 65%);
+            bottom: -200px; left: -160px;
+            animation-duration: 22s;
+        }
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(50px, 50px); }
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.72);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--line);
+            box-shadow: 0 12px 30px rgba(15, 118, 110, 0.10);
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 0.9rem 5%;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--line);
+        }
+        .nav-container {
+            max-width: 880px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        .logo img { width: 30px; height: 30px; }
+        .nav-links { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+        .nav-btn {
+            padding: 0.45rem 1rem;
+            border-radius: 999px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: var(--primary);
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, 0.7);
+            transition: box-shadow 0.2s, filter 0.2s;
+        }
+        .nav-btn:hover { box-shadow: 0 4px 14px rgba(15, 118, 110, 0.25); }
+        .nav-btn.warm {
+            background: var(--grad-warm);
+            color: #fff;
+            border-color: transparent;
+        }
+        .nav-btn.warm:hover { filter: brightness(1.06); }
+
+        .main-content {
+            max-width: 880px;
+            margin: 0 auto;
+            padding: 2.5rem 1.2rem 3rem;
+        }
+
+        .hero-section {
+            border-radius: 20px;
+            padding: 2.2rem 2rem;
+            text-align: center;
+            margin-bottom: 1.6rem;
+        }
+        .hero-badge {
+            display: inline-block;
+            padding: 0.3rem 0.9rem;
+            border-radius: 999px;
+            background: rgba(240, 169, 59, 0.15);
+            color: var(--accent-dark);
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .hero-section h1 {
+            font-size: 2rem;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.7rem;
+        }
+        .hero-section p { color: var(--text-2); max-width: 620px; margin: 0 auto 1rem; }
+        .hero-section a { color: var(--primary); font-weight: 600; }
+
+        .progress-wrap {
+            border-radius: 16px;
+            padding: 1rem 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.6rem;
+        }
+        .progress-label {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+        .progress-track {
+            flex: 1;
+            height: 12px;
+            border-radius: 999px;
+            background: rgba(15, 118, 110, 0.12);
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 10%;
+            background: var(--grad);
+            border-radius: 999px;
+            transition: width 0.6s ease;
+        }
+
+        .level-card {
+            border-radius: 16px;
+            padding: 1.2rem 1.4rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1.1rem;
+        }
+        .level-num {
+            width: 52px;
+            height: 52px;
+            flex-shrink: 0;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: #fff;
+            background: var(--grad);
+        }
+        .level-card.locked .level-num { background: rgba(15, 118, 110, 0.18); color: var(--primary); }
+        .level-card.done .level-num { background: var(--grad-warm); }
+        .level-body { flex: 1; min-width: 0; }
+        .level-body h3 { font-size: 1.05rem; color: var(--text); }
+        .level-body p { font-size: 0.88rem; color: var(--text-2); }
+        .level-card.locked h3 { color: #94a3b8; }
+        .level-card.locked p { color: #b6c2cd; }
+
+        .unlock-row { display: flex; gap: 0.6rem; margin-top: 0.6rem; flex-wrap: wrap; }
+        .unlock-row input {
+            flex: 1;
+            min-width: 180px;
+            padding: 0.55rem 0.9rem;
+            border-radius: 10px;
+            border: 1px solid var(--line);
+            background: #fff;
+            font-size: 0.95rem;
+            outline: none;
+        }
+        .unlock-row input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12); }
+        .unlock-btn {
+            padding: 0.55rem 1.2rem;
+            border-radius: 10px;
+            border: none;
+            background: var(--grad-warm);
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: filter 0.2s;
+        }
+        .unlock-btn:hover { filter: brightness(1.08); }
+
+        .status-tag {
+            flex-shrink: 0;
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 0.35rem 0.85rem;
+            border-radius: 999px;
+            white-space: nowrap;
+        }
+        .status-tag.open { background: rgba(16, 185, 129, 0.14); color: #059669; }
+        .status-tag.lock { background: rgba(100, 116, 139, 0.14); color: #64748b; }
+        .status-tag.final { background: rgba(240, 169, 59, 0.18); color: var(--accent-dark); }
+
+        .err-msg { color: #dc2626; font-size: 0.85rem; margin-top: 0.4rem; display: none; }
+        .shake { animation: shake 0.4s; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+
+        .grad-card {
+            border-radius: 16px;
+            padding: 1.6rem;
+            text-align: center;
+            margin-top: 1.4rem;
+            display: none;
+        }
+        .grad-card.show { display: block; }
+        .grad-card h2 { font-size: 1.4rem; margin-bottom: 0.5rem; }
+        .grad-card p { color: var(--text-2); font-size: 0.95rem; }
+
+        .confetti {
+            position: fixed;
+            top: -20px;
+            width: 10px;
+            height: 16px;
+            z-index: 999;
+            pointer-events: none;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            to { transform: translateY(105vh) rotate(720deg); opacity: 0.6; }
+        }
+
+        .tools-row {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.88rem;
+            color: #94a3b8;
+        }
+        .tools-row button {
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 0.88rem;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+        .tools-row button:hover { color: #dc2626; }
+
+        footer {
+            max-width: 880px;
+            margin: 0 auto 2rem;
+            padding: 1.2rem 1.4rem;
+            border-radius: 16px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: var(--text-2);
+        }
+        footer a { color: var(--primary); text-decoration: none; font-weight: 600; }
+
+        @media (max-width: 640px) {
+            .hero-section { padding: 1.6rem 1.2rem; }
+            .hero-section h1 { font-size: 1.55rem; }
+            .level-card { padding: 1rem; gap: 0.8rem; }
+            .level-num { width: 42px; height: 42px; font-size: 1.1rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-orb primary"></div>
+    <div class="bg-orb warm"></div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a class="logo" href="index.html">
+                <img src="img/logo.svg" alt="扶九API Logo">
+                扶九API
+            </a>
+            <div class="nav-links">
+                <a class="nav-btn" href="codex-tutorial.html">安装教程</a>
+                <a class="nav-btn" href="https://fujiuapi.com" target="_blank" rel="noopener">控制台</a>
+                <a class="nav-btn warm" href="https://fujiuapi.com" target="_blank" rel="noopener">返回首页</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <section class="hero-section glass">
+            <span class="hero-badge">🎮 AI十关 · 口令解锁</span>
+            <h1>十关关卡</h1>
+            <p>每通一关，终端里的教练都会给你一枚<b>通关口令</b>。在这里输入口令，解锁下一关——进度自动保存在你自己的浏览器里。</p>
+            <p>还没开玩？先看<a href="codex-tutorial.html">Codex 安装教程</a>，下载关卡包，回终端跟教练说一声「开始」。</p>
+        </section>
+
+        <div class="progress-wrap glass">
+            <span class="progress-label">已解锁 <span id="p-done">1</span>/10</span>
+            <div class="progress-track"><div class="progress-fill" id="p-fill"></div></div>
+        </div>
+
+        <div id="levels"></div>
+
+        <section class="grad-card glass" id="grad-card">
+            <h2>🎓 结业验证</h2>
+            <p>十关全部解锁！完成第 10 关后，教练会给你<b>最后一枚口令</b>。输入它，领取你的结业撒花。</p>
+            <div class="unlock-row" style="justify-content:center;">
+                <input type="text" id="grad-input" placeholder="输入结业口令" autocomplete="off">
+                <button class="unlock-btn" id="grad-btn">领结业撒花</button>
+            </div>
+            <p class="err-msg" id="grad-err">口令不对。回终端跟教练验收第 10 关的交付物，口令是通关的奖励。</p>
+        </section>
+
+        <div class="tools-row">
+            换设备进度不同步（存在本机） · <button id="reset-btn">重新开始（清除本机进度）</button>
+        </div>
+    </main>
+
+    <footer class="glass">
+        <p style="margin-bottom: 0.5rem;">
+            <a href="https://fujiuapi.com" target="_blank" rel="noopener">返回首页</a> ·
+            <a href="codex-tutorial.html">Codex 安装教程</a> ·
+            <a href="api-docs.html">API 文档</a>
+        </p>
+        <p>© 2026 扶九API - 全球领先的主流AI大模型API供应商</p>
+    </footer>
+
+    <script>
+        var PASSWORDS = ['开机了', '整整齐齐', '它读懂了', '说清楚了', '各就各位', '第一版出炉', '挑出刺了', '家规立了', '一句话重播', '出师了'];
+        var LEVELS = [
+            { t: '让它听懂你', d: '跟教练说一声「开始」，用大白话派出你的第一件活' },
+            { t: '桌面大扫除', d: '乱七八糟的 30 个文件：先审方案，你点头它才动手' },
+            { t: '长文驯服术', d: '一篇没人想读的长文，让它读给你听——它不通灵，它听话' },
+            { t: '需求四件套', d: '对方是谁 / 想达到什么 / 什么语气 / 给足素材' },
+            { t: '各就各位', d: '给你的实习生建正式工位：项目文件夹工作流' },
+            { t: '第一版出炉', d: '派一件真活出 v1，只花说清楚需求的时间' },
+            { t: '挑刺到满意', d: '你挑刺它改，改到你亲口说「行，就这版」' },
+            { t: '立下家规', d: '亲手写出你自己的 AGENTS.md，它开机就懂你' },
+            { t: '起手式', d: '把重复的活存成一句话，以后每次一键重播' },
+            { t: '出师', d: '独立指挥一件真活 + 你的《任务判断清单》' }
+        ];
+
+        var KEY = 'fj_codex_levels';
+        var GRAD_KEY = 'fj_codex_grad';
+        var unlocked = parseInt(localStorage.getItem(KEY) || '1', 10);
+        if (!(unlocked >= 1 && unlocked <= 10)) { unlocked = 1; }
+
+        function save() { localStorage.setItem(KEY, String(unlocked)); }
+
+        function norm(s) { return (s || '').replace(/\s+/g, ''); }
+
+        function render() {
+            var box = document.getElementById('levels');
+            box.innerHTML = '';
+            for (var i = 1; i <= 10; i++) {
+                var lv = LEVELS[i - 1];
+                var isOpen = i <= unlocked;
+                var card = document.createElement('div');
+                card.className = 'level-card glass ' + (isOpen ? (i === 10 ? 'done' : 'open') : 'locked');
+                card.id = 'lv-' + i;
+                var numHtml = isOpen ? (i === 10 ? '🎓' : '✓') : String(i);
+                var statusHtml = isOpen
+                    ? '<span class="status-tag ' + (i === 10 ? 'final' : 'open') + '">' + (i === 10 ? '终极关' : '已解锁') + '</span>'
+                    : '<span class="status-tag lock">🔒 未解锁</span>';
+                var bodyHtml = '<div class="level-body"><h3>第 ' + i + ' 关 · ' + lv.t + '</h3><p>' + lv.d + '</p>';
+                if (!isOpen) {
+                    bodyHtml += '<div class="unlock-row">' +
+                        '<input type="text" placeholder="输入第 ' + (i - 1) + ' 关通关口令" id="in-' + i + '" autocomplete="off">' +
+                        '<button class="unlock-btn" data-lv="' + i + '">解锁第 ' + i + ' 关</button>' +
+                        '</div><p class="err-msg" id="err-' + i + '">口令不对。口令是通关奖励——回终端跟教练把第 ' + (i - 1) + ' 关的最后一步做完，它自然会给你。</p>';
+                }
+                bodyHtml += '</div>';
+                card.innerHTML = '<div class="level-num">' + numHtml + '</div>' + bodyHtml + statusHtml;
+                box.appendChild(card);
+            }
+            document.getElementById('p-done').textContent = unlocked;
+            document.getElementById('p-fill').style.width = (unlocked * 10) + '%';
+            var gradCard = document.getElementById('grad-card');
+            var gradDone = localStorage.getItem(GRAD_KEY) === '1';
+            if (unlocked >= 10 && !gradDone) {
+                gradCard.classList.add('show');
+            } else if (gradDone) {
+                gradCard.classList.add('show');
+                gradCard.querySelector('h2').textContent = '🎓 已结业 · 出师了！';
+                gradCard.querySelector('p').innerHTML = '十关之前，你是用 AI 的人；十关之后，你是带 AI 的人。你的实习生 24 小时在岗——多给它派活。';
+                gradCard.querySelector('.unlock-row').style.display = 'none';
+            } else {
+                gradCard.classList.remove('show');
+            }
+            bindButtons();
+        }
+
+        function tryUnlock(lv) {
+            var input = document.getElementById('in-' + lv);
+            var err = document.getElementById('err-' + lv);
+            var card = document.getElementById('lv-' + lv);
+            if (norm(input.value) === PASSWORDS[lv - 2]) {
+                unlocked = Math.max(unlocked, lv);
+                save();
+                render();
+                var el = document.getElementById('lv-' + lv);
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                burst(24);
+            } else {
+                err.style.display = 'block';
+                card.classList.remove('shake');
+                void card.offsetWidth;
+                card.classList.add('shake');
+            }
+        }
+
+        function bindButtons() {
+            document.querySelectorAll('.unlock-btn[data-lv]').forEach(function (btn) {
+                btn.onclick = function () { tryUnlock(parseInt(btn.getAttribute('data-lv'), 10)); };
+            });
+            document.querySelectorAll('.unlock-row input').forEach(function (inp) {
+                inp.onkeydown = function (e) {
+                    if (e.key === 'Enter') {
+                        var lv = parseInt(inp.id.split('-')[1], 10);
+                        tryUnlock(lv);
+                    }
+                };
+            });
+        }
+
+        function burst(n) {
+            var colors = ['#0f766e', '#14b8a6', '#f0a93b', '#f59e0b', '#10b981'];
+            for (var i = 0; i < n; i++) {
+                var c = document.createElement('div');
+                c.className = 'confetti';
+                c.style.left = (Math.random() * 100) + 'vw';
+                c.style.background = colors[Math.floor(Math.random() * colors.length)];
+                c.style.animationDuration = (2 + Math.random() * 1.6) + 's';
+                c.style.animationDelay = (Math.random() * 0.5) + 's';
+                c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                document.body.appendChild(c);
+                setTimeout(function (el) { return function () { el.remove(); }; }(c), 4200);
+            }
+        }
+
+        document.getElementById('grad-btn').onclick = function () {
+            var v = norm(document.getElementById('grad-input').value);
+            var err = document.getElementById('grad-err');
+            if (v === PASSWORDS[9]) {
+                localStorage.setItem(GRAD_KEY, '1');
+                render();
+                burst(120);
+            } else {
+                err.style.display = 'block';
+            }
+        };
+        document.getElementById('grad-input').onkeydown = function (e) {
+            if (e.key === 'Enter') document.getElementById('grad-btn').click();
+        };
+        document.getElementById('reset-btn').onclick = function () {
+            if (confirm('确定清除本机的闯关进度，从第 1 关重来吗？')) {
+                localStorage.removeItem(KEY);
+                localStorage.removeItem(GRAD_KEY);
+                unlocked = 1;
+                render();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        };
+
+        render();
+    </script>
+</body>
+</html>

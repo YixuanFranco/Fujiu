@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="扶九API Codex 闯关教程：免 ChatGPT Plus，用自己的 API Key 在终端跑 OpenAI Codex，十关游戏化学会 AI 编程">
+    <title>扶九API - Codex 闯关教程</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0f766e;
+            --primary-dark: #115e59;
+            --accent: #f0a93b;
+            --accent-dark: #d98f1f;
+            --text: #1f2937;
+            --text-2: #4b5563;
+            --bg: #f8fafc;
+            --line: rgba(15, 118, 110, 0.18);
+            --grad: linear-gradient(135deg, #0f766e 0%, #14b8a6 100%);
+            --grad-warm: linear-gradient(135deg, #f0a93b 0%, #f59e0b 100%);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.85;
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(165deg, #f0fdfa 0%, #fffbeb 45%, #f8fafc 100%),
+                linear-gradient(rgba(20, 184, 166, 0.07) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(20, 184, 166, 0.07) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+            z-index: -2;
+        }
+
+        .bg-orb {
+            position: fixed;
+            width: 520px;
+            height: 520px;
+            border-radius: 50%;
+            filter: blur(55px);
+            z-index: -1;
+            opacity: 0.55;
+            animation: float 18s ease-in-out infinite;
+        }
+
+        .bg-orb.primary {
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.32) 0%, transparent 65%);
+            top: -220px;
+            right: -180px;
+        }
+
+        .bg-orb.warm {
+            background: radial-gradient(circle, rgba(240, 169, 59, 0.3) 0%, transparent 65%);
+            bottom: -200px;
+            left: -160px;
+            animation-duration: 22s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(45px, 45px);
+            }
+        }
+
+        .glass {
+            background: rgba(255, 255, 255, 0.78);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--line);
+            box-shadow: 0 12px 30px rgba(15, 118, 110, 0.1);
+        }
+
+        /* 导航 */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem 5%;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .nav-btn {
+            padding: 0.5rem 1.2rem;
+            background: rgba(15, 118, 110, 0.12);
+            color: var(--primary);
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            border: 1px solid rgba(15, 118, 110, 0.25);
+        }
+
+        .nav-btn:hover {
+            background: rgba(15, 118, 110, 0.22);
+        }
+
+        .nav-btn.warm {
+            background: rgba(240, 169, 59, 0.16);
+            color: var(--accent-dark);
+            border-color: rgba(240, 169, 59, 0.4);
+        }
+
+        .nav-btn.warm:hover {
+            background: rgba(240, 169, 59, 0.28);
+        }
+
+        /* 主内容 */
+        .main-content {
+            padding: 110px 5% 80px;
+            max-width: 880px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-section {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            background: var(--grad-warm);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1.2rem;
+            color: #fff;
+            box-shadow: 0 10px 24px rgba(240, 169, 59, 0.3);
+        }
+
+        .hero-section h1 {
+            font-size: 2.4rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #0f766e 0%, #115e59 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-section p {
+            font-size: 1.08rem;
+            color: var(--text-2);
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .hero-tags {
+            display: flex;
+            gap: 0.6rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 1.4rem;
+        }
+
+        .hero-tag {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--primary);
+            background: rgba(15, 118, 110, 0.1);
+            border: 1px solid rgba(15, 118, 110, 0.22);
+            padding: 0.25rem 0.9rem;
+            border-radius: 999px;
+        }
+
+        /* 章节卡片 */
+        .step-card {
+            border-radius: 18px;
+            padding: 2rem;
+            margin-bottom: 1.6rem;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .step-number {
+            width: 44px;
+            height: 44px;
+            background: var(--grad);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            font-weight: 700;
+            flex-shrink: 0;
+            color: #fff;
+            box-shadow: 0 8px 18px rgba(15, 118, 110, 0.22);
+        }
+
+        .step-number.warm {
+            background: var(--grad-warm);
+            box-shadow: 0 8px 18px rgba(240, 169, 59, 0.28);
+        }
+
+        .step-header h2 {
+            font-size: 1.35rem;
+            color: var(--text);
+        }
+
+        .step-content p {
+            margin-bottom: 1rem;
+            color: var(--text-2);
+        }
+
+        .step-content b {
+            color: var(--primary-dark);
+        }
+
+        .step-content ul,
+        .step-content ol {
+            margin: 0 0 1rem 1.4rem;
+            color: var(--text-2);
+        }
+
+        .step-content li {
+            margin-bottom: 0.4rem;
+        }
+
+        /* 代码块 */
+        .code-block {
+            position: relative;
+            background: #0f172a;
+            border-radius: 12px;
+            margin: 1rem 0;
+            overflow: hidden;
+        }
+
+        .code-block pre {
+            padding: 1.1rem 1.2rem;
+            overflow-x: auto;
+        }
+
+        .code-block code {
+            font-family: "SF Mono", Monaco, Consolas, monospace;
+            font-size: 0.88rem;
+            color: #e2e8f0;
+            line-height: 1.7;
+            white-space: pre;
+        }
+
+        .code-block .cmt {
+            color: #7dd3a8;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.6rem;
+            right: 0.6rem;
+            border: none;
+            background: rgba(255, 255, 255, 0.12);
+            color: #cbd5e1;
+            font-size: 0.75rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.25s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.22);
+            color: #fff;
+        }
+
+        code.inline {
+            background: rgba(15, 118, 110, 0.1);
+            color: var(--primary-dark);
+            padding: 0.12rem 0.5rem;
+            border-radius: 6px;
+            font-family: "SF Mono", Monaco, Consolas, monospace;
+            font-size: 0.88em;
+        }
+
+        /* 提示框 */
+        .tip-box {
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            margin: 1rem 0;
+            font-size: 0.93rem;
+        }
+
+        .tip-box.good {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.35);
+            color: #065f46;
+        }
+
+        .tip-box.warn {
+            background: rgba(240, 169, 59, 0.12);
+            border: 1px solid rgba(240, 169, 59, 0.45);
+            color: #92400e;
+        }
+
+        .tip-box b {
+            font-weight: 700;
+        }
+
+        /* 表格 */
+        .step-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            font-size: 0.92rem;
+        }
+
+        .step-content th,
+        .step-content td {
+            border: 1px solid var(--line);
+            padding: 0.55rem 0.9rem;
+            text-align: left;
+            color: var(--text-2);
+        }
+
+        .step-content th {
+            background: rgba(15, 118, 110, 0.08);
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        /* 下载卡片 */
+        .download-card {
+            border-radius: 18px;
+            padding: 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(240, 169, 59, 0.14), rgba(20, 184, 166, 0.1));
+            border: 1px solid rgba(240, 169, 59, 0.4);
+            margin: 1.6rem 0;
+        }
+
+        .download-card h3 {
+            font-size: 1.2rem;
+            color: var(--text);
+            margin-bottom: 0.6rem;
+        }
+
+        .download-card p {
+            color: var(--text-2);
+            font-size: 0.95rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .dl-btn {
+            display: inline-block;
+            padding: 0.85rem 2.2rem;
+            background: var(--grad-warm);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 12px;
+            text-decoration: none;
+            box-shadow: 0 10px 24px rgba(240, 169, 59, 0.35);
+            transition: all 0.3s;
+        }
+
+        .dl-btn:hover {
+            filter: brightness(1.08);
+            box-shadow: 0 12px 28px rgba(240, 169, 59, 0.45);
+        }
+
+        /* FAQ */
+        .faq-item {
+            border-left: 3px solid var(--accent);
+            padding: 0.2rem 0 0.2rem 1.1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .faq-item h4 {
+            color: var(--text);
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .faq-item p {
+            color: var(--text-2);
+            font-size: 0.93rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2.5rem 5% 3rem;
+            color: var(--text-2);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            margin: 0 0.6rem;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 640px) {
+            .hero-section h1 {
+                font-size: 1.7rem;
+            }
+
+            .step-card {
+                padding: 1.4rem;
+            }
+
+            .nav-links {
+                gap: 0.4rem;
+            }
+
+            .nav-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.82rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-orb primary"></div>
+    <div class="bg-orb warm"></div>
+
+    <!-- 导航 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a class="logo" href="index.html">
+                <img src="img/logo.svg" alt="扶九API Logo">
+                扶九API
+            </a>
+            <div class="nav-links">
+                <a class="nav-btn" href="https://fujiuapi.com" target="_blank" rel="noopener">控制台</a>
+                <a class="nav-btn" href="api-docs.html">API 文档</a>
+                <a class="nav-btn warm" href="https://fujiuapi.com" target="_blank" rel="noopener">返回首页</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+
+        <!-- Hero -->
+        <section class="hero-section glass">
+            <span class="hero-badge">🎮 十关闯关 · 游戏化学教程</span>
+            <h1>Codex 闯关教程</h1>
+            <p>不用买 ChatGPT Plus（省下 $20/月），用你自己的扶九API Key，在终端里调教 OpenAI 官方编程智能体 Codex——十个关卡，从零基础到出师。</p>
+            <div class="hero-tags">
+                <span class="hero-tag">免 Plus 账号</span>
+                <span class="hero-tag">按量付费更便宜</span>
+                <span class="hero-tag">10 关游戏化教学</span>
+                <span class="hero-tag">零基础友好</span>
+            </div>
+        </section>
+
+        <!-- 0 Codex 是什么 -->
+        <section class="step-card glass">
+            <div class="step-header">
+                <div class="step-number">?</div>
+                <h2>Codex 是什么？为什么值得玩</h2>
+            </div>
+            <div class="step-content">
+                <p><b>Codex</b> 是 OpenAI 官方推出的<b>命令行 AI 编程智能体</b>：你在终端里用大白话下指令，它直接读你的文件、写代码、改文档、跑命令——像一个住在电脑里的全能实习生。</p>
+                <p>官方用法要<b>绑定 ChatGPT Plus/Pro 账号（$20/月起）</b>。但 Codex 支持自定义接口——把接口指向 <b>扶九API</b>，用按量付费的 API Key 就能跑，<b>几分钱起步，模型随便换</b>。</p>
+                <div class="tip-box good"><b>本教程两件事：</b>① 把 Codex 接上扶九API（5 分钟）；② 送你一套「十关关卡包」，跟着 AI 教练一关一关玩下来，顺便把真活干了。</div>
+            </div>
+        </section>
+
+        <!-- 步骤 1 -->
+        <section class="step-card glass">
+            <div class="step-header">
+                <div class="step-number">1</div>
+                <h2>装前置环境（Node.js）</h2>
+            </div>
+            <div class="step-content">
+                <p>Codex 通过 npm 安装，需要 <b>Node.js 18 或更高版本</b>。</p>
+                <ul>
+                    <li><b>Mac 用户</b>：打开「终端」（启动台搜 terminal），先装 <a href="https://nodejs.org/" target="_blank" rel="noopener">Node.js LTS 版</a>，或用 Homebrew：<code class="inline">brew install node</code></li>
+                    <li><b>Windows 用户</b>：建议先装 WSL（Windows 内置的 Linux 子系统）。以管理员身份打开 PowerShell，输入：</li>
+                </ul>
+                <div class="code-block">
+                    <button class="copy-btn">复制</button>
+                    <pre><code>wsl --install</code></pre>
+                </div>
+                <p>装完重启电脑，开始菜单出现 <b>Ubuntu</b>，打开它（第一次会让你设个用户名和密码），后面所有命令都在这个窗口里敲。</p>
+            </div>
+        </section>
+
+        <!-- 步骤 2 -->
+        <section class="step-card glass">
+            <div class="step-header">
+                <div class="step-number">2</div>
+                <h2>安装 Codex</h2>
+            </div>
+            <div class="step-content">
+                <p>打开终端（Windows 用户打开 Ubuntu 窗口），复制粘贴这行，回车：</p>
+                <div class="code-block">
+                    <button class="copy-btn">复制</button>
+                    <pre><code>npm install -g @openai/codex</code></pre>
+                </div>
+                <p>跑完后输入 <code class="inline">codex --version</code>，能打印版本号就说明装好了。</p>
+                <div class="tip-box warn"><b>提示「npm 不是内部或外部命令」？</b>说明 Node.js 没装好——回到步骤 1 重装，装完<b>关掉终端重新打开</b>再试。</div>
+            </div>
+        </section>
+
+        <!-- 步骤 3 -->
+        <section class="step-card glass">
+            <div class="step-header">
+                <div class="step-number">3</div>
+                <h2>获取你的扶九API Key</h2>
+            </div>
+            <div class="step-content">
+                <ol>
+                    <li>打开 <a href="https://fujiuapi.com" target="_blank" rel="noopener"><b>fujiuapi.com</b></a>，登录（没账号先注册，充值套餐开通额度）</li>
+                    <li>进入 <b>控制台 → 令牌</b>，点「添加令牌」</li>
+                    <li>分组建议选 <code class="inline">vip</code>（价格更优），创建后<b>复制以 sk- 开头的密钥</b></li>
+                </ol>
+                <div class="tip-box warn"><b>Key 就是你的钱包钥匙</b>：不要发给别人、不要传到网上。泄露了立刻回控制台删除重建。</div>
+            </div>
+        </section>
+
+        <!-- 步骤 4 -->
+        <section class="step-card glass">
+            <div class="step-header">
+                <div class="step-number warm">4</div>
+                <h2>把 Codex 接上扶九API（核心步骤）</h2>
+            </div>
+            <div class="step-content">
+                <p><b>4.1 配置接口。</b>在终端里依次执行（一次一行）：</p>
+                <div class="code-block">
+                    <button class="copy-btn">复制</button>
+                    <pre><code>mkdir -p ~/.codex
+nano ~/.codex/config.toml</code></pre>
+                </div>
+                <p>在打开的编辑器里粘贴以下内容，然后按 <code class="inline">Ctrl+O</code> 回车保存、<code class="inline">Ctrl+X</code> 退出：</p>
+                <div class="code-block">
+                    <button class="copy-btn">复制</button>
+                    <pre><code>model = "gpt-5-codex"
+model_provider = "fujiu"
+
+[model_providers.fujiu]
+name = "扶九API"
+base_url = "https://fujiuapi.com/v1"
+env_key = "FUJIU_API_KEY"
+wire_api = "chat"</code></pre>
+                </div>
+                <p><b>4.2 存入你的 Key。</b>把下面命令里的 <code class="inline">sk-你的密钥</code> 换成步骤 3 复制的 Key，执行：</p>
+                <div class="code-block">
+                    <button class="copy-btn">复制</button>
+                    <pre><code><span class="cmt"># Mac 用户：</span>
+echo 'export FUJIU_API_KEY="sk-你的密钥"' >> ~/.zshrc && source ~/.zshrc
+
+<span class="cmt"># Windows 用户（WSL 窗口里）：</span>
+echo 'export FUJIU_API_KEY="sk-你的密钥"' >> ~/.bashrc && source ~/.bashrc</code></pre>
+                </div>
+                <div class="tip-box good"><b>想换模型？</b>改 config.toml 第一行即可，比如 <code class="inline">model = "gpt-5.3-codex"</code>、<code class="inline">"gpt-5.1-codex"</code>、<code class="inline">"gpt-5.4"</code>，全是扶九API 已上线的模型。</div>
+            </div>
+        </section>
+
+        <!-- 步骤 5 -->
+        <section class="step-card glass">
+            <div class="step-header">
+                <div class="step-number">5</div>
+                <h2>验收：跑通第一句话</h2>
+            </div>
+            <div class="step-content">
+                <div class="code-block">
+                    <button class="copy-btn">复制</button>
+                    <pre><code>mkdir -p ~/codex-test && cd ~/codex-test
+codex</code></pre>
+                </div>
+                <p>进入对话界面后，直接打字：<code class="inline">帮我创建一个 hello.txt，内容写"扶九API，起飞"</code>，回车。它会请求权限（选允许），然后你会在目录里看到这个文件——<b>恭喜，通了！</b></p>
+                <div class="tip-box warn"><b>首次启动若弹出登录引导</b>：我们走的是自己的接口，不需要 ChatGPT 账号——按提示跳过 / 选择使用 API Key 即可。</div>
+                <div class="tip-box good"><b>跑不动了？</b>按 <b>Esc</b> 随时让它停下。花多少钱随时在 <a href="https://fujiuapi.com" target="_blank" rel="noopener"><b>控制台 → 日志 / 钱包</b></a> 里看，一分一笔都清楚。</div>
+            </div>
+        </section>
+
+        <!-- 步骤 6 十关 -->
+        <section class="step-card glass">
+            <div class="step-header">
+                <div class="step-number warm">6</div>
+                <h2>进入十关：下载关卡包，开玩</h2>
+            </div>
+            <div class="step-content">
+                <p>「十关关卡包」是一个游戏化训练场：解压到桌面，在里面启动 Codex，它会化身<b>闯关教练</b>——你说「开始」「继续」「急救」，它带你一关一关过，每关送你一个<b>通关口令</b>。从写第一封邮件到整理乱成一团的文件夹，学完直接用在真活上。</p>
+
+                <div class="download-card">
+                    <h3>🎁 扶九API 十关关卡包 · Codex 版</h3>
+                    <p>含 10 关完整教案 + 进度档案 + 练习素材，解压到桌面即可开玩</p>
+                    <a class="dl-btn" href="files/fujiu-codex-pack.zip" download>⬇️ 下载关卡包（Windows / Mac 通用）</a>
+                </div>
+
+                <p><b>开场三步：</b></p>
+                <ol>
+                    <li>把下载的 zip <b>解压到桌面</b>（别在压缩包里直接玩）</li>
+                    <li>终端里进入文件夹（Windows 在 WSL 里，嫌长输入 <code class="inline">cd ~/Desktop/扶</code> 按 <b>Tab</b> 自动补全）：<code class="inline">cd ~/Desktop/扶九API十关关卡包·Codex版</code></li>
+                    <li>输入 <code class="inline">codex</code> 回车，然后对它说：<b>「开始」</b></li>
+                </ol>
+                <div class="tip-box good"><b>三个救命口令：</b>想开始说「<b>开始</b>」· 中途退出回来说「<b>继续</b>」（进度自动存档）· 卡住报错说「<b>急救</b>」。</div>
+                <div class="tip-box good"><b>每通一关</b>，教练会给你一枚<b>通关口令</b>——存好，回 <a href="codex-levels.html" target="_blank" rel="noopener"><b>十关关卡页</b></a> 输入口令解锁下一关，看你的解锁进度。</div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="step-card glass">
+            <div class="step-header">
+                <div class="step-number">?</div>
+                <h2>常见问题急救</h2>
+            </div>
+            <div class="step-content">
+                <div class="faq-item">
+                    <h4>报错 401 / Unauthorized</h4>
+                    <p>Key 没配对：检查第 4.2 步的环境变量名是不是 <code class="inline">FUJIU_API_KEY</code>、Key 有没有多余的空格，改完<b>关掉终端重开</b>再试。</p>
+                </div>
+                <div class="faq-item">
+                    <h4>连接失败 / timeout</h4>
+                    <p>检查 config.toml 里 <code class="inline">base_url</code> 必须是 <code class="inline">https://fujiuapi.com/v1</code>（结尾带 /v1），保存后重开 codex。</p>
+                </div>
+                <div class="faq-item">
+                    <h4>Windows 提示「npm 不是内部或外部命令」</h4>
+                    <p>Node.js 没装好或终端没重开。推荐直接用 WSL（步骤 1），体验和 Mac 一致。</p>
+                </div>
+                <div class="faq-item">
+                    <h4>想换更便宜 / 更强的模型</h4>
+                    <p>改 config.toml 的 <code class="inline">model</code> 字段。编程推荐 <code class="inline">gpt-5-codex</code> / <code class="inline">gpt-5.3-codex</code>；日常问答可用 <code class="inline">gpt-5.4-mini</code>，省钱。</p>
+                </div>
+                <div class="faq-item">
+                    <h4>怎么查看消耗了多少钱</h4>
+                    <p>登录 <a href="https://fujiuapi.com" target="_blank" rel="noopener">fujiuapi.com</a> → 控制台 → 日志，每次调用、每个 token 都有明细。</p>
+                </div>
+                <div class="faq-item">
+                    <h4>还有别的问题？</h4>
+                    <p>QQ 群友救援：<b>2306309941</b>，或点官网顶部「联系我们」加企业微信。</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="glass" style="max-width: 880px; margin: 0 auto 2rem; border-radius: 16px;">
+        <p style="margin-bottom: 0.6rem;">
+            <a href="https://fujiuapi.com" target="_blank" rel="noopener">返回首页</a>·
+            <a href="api-docs.html">API 文档</a>·
+            <a href="index.html">更多教程</a>
+        </p>
+        <p>© 2026 扶九API - 全球领先的主流AI大模型API供应商</p>
+    </footer>
+
+    <script>
+        // 代码块复制按钮
+        document.querySelectorAll('.copy-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var code = btn.parentElement.querySelector('code');
+                var text = code.innerText;
+                function done() {
+                    btn.textContent = '✓ 已复制';
+                    setTimeout(function () { btn.textContent = '复制'; }, 1600);
+                }
+                if (navigator.clipboard && navigator.clipboard.writeText) {
+                    navigator.clipboard.writeText(text).then(done);
+                } else {
+                    var ta = document.createElement('textarea');
+                    ta.value = text;
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                    done();
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
