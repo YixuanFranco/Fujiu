@@ -608,6 +608,7 @@ echo 'export FUJIU_API_KEY="sk-你的密钥"' >> ~/.zshrc && source ~/.zshrc
 <span class="cmt"># Windows 用户（WSL 窗口里）：</span>
 echo 'export FUJIU_API_KEY="sk-你的密钥"' >> ~/.bashrc && source ~/.bashrc</code></pre>
                 </div>
+                <div class="tip-box warn"><b>用 Codex 桌面 App 的话请注意：</b>这一步写进 <code class="inline">~/.zshrc</code> 的变量<b>只对终端生效</b>。从 Dock / 启动台点图标启动的桌面 App 读不到它，会报 <code class="inline">Missing environment variable: FUJIU_API_KEY</code>——解决办法见文末<a href="#faq-app-env">常见问题第一条</a>。</div>
                 <div class="tip-box good"><b>想换模型？</b>改 config.toml 第一行即可，比如 <code class="inline">model = "gpt-5.3-codex"</code>、<code class="inline">"gpt-5.1-codex"</code>、<code class="inline">"gpt-5.4"</code>，全是扶九API 已上线的模型。</div>
             </div>
         </section>
@@ -663,6 +664,17 @@ codex</code></pre>
                 <h2>常见问题急救</h2>
             </div>
             <div class="step-content">
+                <div class="faq-item" id="faq-app-env">
+                    <h4>终端里 codex 能用，Codex 桌面 App 却报 <code class="inline">Missing environment variable: FUJIU_API_KEY</code></h4>
+                    <p>不是 Key 配错了，是 App 压根读不到它。<code class="inline">~/.zshrc</code> 只在<b>终端启动 shell 时</b>被读取；而从 Dock、启动台、访达点图标启动的 App 由系统的 launchd 拉起，全程不经过 zsh，所以拿不到你 <code class="inline">export</code> 的变量。<code class="inline">config.toml</code> 是两边共用的，所以 base_url、model 都正常，唯独 Key 因为存在环境变量里而断了。</p>
+                    <p><b>办法一（最快）：</b>从终端敲 <code class="inline">codex app</code> 启动。这样 App 是终端 shell 的子进程，会直接继承环境变量。</p>
+                    <p><b>办法二（以后点图标也能用）：</b>把 Key 交给 launchd，然后 <b>Cmd+Q 彻底退出</b> Codex App 再重开（只关窗口不算，必须退进程）：</p>
+                    <div class="code-block">
+                        <button class="copy-btn">复制</button>
+                        <pre><code>launchctl setenv FUJIU_API_KEY "sk-你的密钥"</code></pre>
+                    </div>
+                    <p>敲 <code class="inline">launchctl getenv FUJIU_API_KEY</code> 能打印出 Key 就说明写进去了。此法<b>重启电脑后失效</b>；想开机自动生效，把这条命令做成 <code class="inline">~/Library/LaunchAgents/</code> 下的 LaunchAgent 开机运行即可。</p>
+                </div>
                 <div class="faq-item">
                     <h4>报错 401 / Unauthorized</h4>
                     <p>Key 没配对：检查第 4.2 步的环境变量名是不是 <code class="inline">FUJIU_API_KEY</code>、Key 有没有多余的空格，改完<b>关掉终端重开</b>再试。</p>
