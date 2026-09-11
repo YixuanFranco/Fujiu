@@ -170,6 +170,22 @@ setx ANTHROPIC_DEFAULT_HAIKU_MODEL "claude-haiku-4-5-20251001-thinking"</code></
             <div class="tip warn"><b>Haiku 档只有 thinking 版一个选择。</b>线上没有非 thinking 的 Haiku，所以 <code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code> 只能填这一个。Claude Code 会用 Haiku 跑一些轻量后台任务，思考版在这类任务上会多花一点 token，属于目前的唯一选项。</div>
             <div class="tip warn"><b>只能填 claude 系模型。</b>Claude Code 调用的是 Anthropic 原生协议，模型广场里的 gpt、qwen、glm、deepseek 等填进来不会生效。想用 GPT 系模型请走 <a href="codex-tutorial.html">Codex 教程</a>。</div>
 
+            <p class="sub-title">## 两种配置方式二选一，别两边都配</p>
+            <p>上面是写环境变量的做法。另一种做法是写进 <code>~/.claude/settings.json</code> 的 <code>env</code> 字段：</p>
+            <div class="code"><code>{
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "sk-你的密钥",
+    "ANTHROPIC_BASE_URL": "https://fujiuapi.com",
+    "ANTHROPIC_DEFAULT_OPUS_MODEL": "claude-opus-5",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "claude-sonnet-5",
+    "ANTHROPIC_DEFAULT_HAIKU_MODEL": "claude-haiku-4-5-20251001-thinking",
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": "1"
+  }
+}</code></div>
+            <p>这种方式对图形界面客户端也生效，天然绕开上面说的 launchd 问题，更推荐。</p>
+            <div class="tip err"><b>但千万别两处各配一半。</b>最常见的翻车姿势是：密钥写在 <code>~/.zshrc</code>、地址写在 <code>settings.json</code>。两边的值不一致时，实际生效的是哪一个很难判断，你会得到一个自己也说不清的混合状态，排查时极其痛苦。<b>要么全走环境变量，要么全走 settings.json。</b></div>
+            <div class="tip err"><b>更要命的一种情况：</b>如果你以前用官方订阅登录过 Claude Code，配置里可能残留一个 <code>sk-ant-oat01-</code> 开头的令牌——那是你的 <b>Anthropic 官方账号令牌</b>，不是本站密钥（本站的是 <code>sk-</code> 开头）。它一旦和 <code>ANTHROPIC_BASE_URL</code> 指向第三方地址配在一起，就会被发往那个第三方服务器。<b>务必确认填的是本站密钥</b>，官方令牌交给 <code>claude</code> 自己的登录流程管理，不要手写进配置文件。</div>
+
             <p class="sub-title">## 先验接口（强烈建议）</p>
             <p>变量配好后，先用一条 curl 确认密钥和接口是通的，再去开 Claude Code。这一步能把「密钥 / 套餐问题」和「客户端配置问题」分开——直接启动 Claude Code 报错，你分不清是哪一边的毛病，很容易白折腾半天。</p>
             <div class="code"><code>curl https://fujiuapi.com/v1/messages \
@@ -194,6 +210,28 @@ setx ANTHROPIC_DEFAULT_HAIKU_MODEL "claude-haiku-4-5-20251001-thinking"</code></
 
             <p><strong>设置完成后启动一次 Claude Code：</strong></p>
             <div class="code"><code>claude</code></div>
+
+            <p class="sub-title">## 确认真的接到了本站</p>
+            <p>进入 Claude Code 后输入 <code>/status</code>，重点看三行：</p>
+            <div class="code"><code>Auth token:          ANTHROPIC_AUTH_TOKEN
+Anthropic base URL:  https://fujiuapi.com
+Model:               Default (claude-opus-5[1m])</code></div>
+            <p><code>base URL</code> 必须是 <code>fujiuapi.com</code>。如果显示 <code>api.anthropic.com</code>，说明配置没生效，它还在打官方接口——这种情况下就算能用，扣的也是你官方账号的额度。</p>
+            <div class="tip info"><b>顺带确认没有残留的官方密钥抢优先级：</b><br>
+            <code>echo "[$ANTHROPIC_API_KEY]"</code> 应该打印出空的 <code>[]</code>。不为空就执行 <code>unset ANTHROPIC_API_KEY</code>，并检查 <code>~/.zshrc</code> 里有没有旧的 export 没删干净。</div>
+
+            <p class="sub-title">## 最后跑一遍真实任务</p>
+            <p>聊天能通不代表能干活——Claude Code 读文件、改代码、执行命令全靠工具调用。找个空目录起 <code>claude</code>，说一句：</p>
+            <div class="code"><code>读一下当前目录有哪些文件，然后新建一个 test.txt 写入 hello</code></div>
+            <p>正常应该看到它<b>真的调用工具</b>，而不是只回一段「好的，我将为你创建…」的文字：</p>
+            <div class="code"><code>  Listed 1 directory
+
+⏺ Write(test.txt)
+  ⎿  Wrote 1 line to test.txt
+     1 hello
+
+⏺ 当前目录是空的，已创建 test.txt 并写入了 hello。</code></div>
+            <div class="tip ok"><b>已实测：</b>本站接口支持 Claude Code 的完整工具调用链路（读取 → tool_result 回传 → 写入 → 生成总结），文件能真实落盘。测试环境 Claude Code v2.1.232 + <code>claude-opus-5</code>。</div>
         </section>
         <section class="cta">
             <h2>🎯 安装完就可以开始了</h2>
