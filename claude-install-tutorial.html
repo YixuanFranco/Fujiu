@@ -128,6 +128,8 @@ export ANTHROPIC_BASE_URL="https://fujiuapi.com/"</code></div>
 echo 'export ANTHROPIC_BASE_URL="https://fujiuapi.com/"' >> ~/.zshrc
 source ~/.zshrc</code></div>
 
+            <div class="tip warn"><b>这些变量只对终端生效。</b>写进 <code>~/.zshrc</code> 的 export 只有你在终端里敲 <code>claude</code> 时才读得到。如果你用的是图形界面客户端（从 Dock / 启动台点图标启动），它由系统 launchd 拉起、全程不经过 zsh，会提示读不到密钥。两个办法：一是改用 <code>launchctl setenv ANTHROPIC_AUTH_TOKEN "你的密钥"</code>（<code>ANTHROPIC_BASE_URL</code> 同理），设完彻底退出客户端再重开；二是把配置写进 <code>~/.claude/settings.json</code> 的 <code>env</code> 字段，终端和图形界面都能读到。</div>
+
             <p><strong>Windows：</strong></p>
             <div class="code"><code>setx ANTHROPIC_AUTH_TOKEN "你的密钥"
 setx ANTHROPIC_BASE_URL "https://fujiuapi.com/"</code></div>
