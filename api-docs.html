@@ -259,7 +259,7 @@ Authorization: Bearer <span class="s">你的API_KEY</span>
 Content-Type: application/json
 
 {
-  <span class="k">"model"</span>: <span class="s">"claude-sonnet-4-5"</span>,
+  <span class="k">"model"</span>: <span class="s">"claude-sonnet-5"</span>,
   <span class="k">"messages"</span>: [
     {<span class="k">"role"</span>: <span class="s">"user"</span>, <span class="k">"content"</span>: <span class="s">"你好"</span>}
   ]
@@ -268,7 +268,7 @@ Content-Type: application/json
         <h3>3. 流式输出（SSE）</h3>
         <p>在请求体中加上 <code>"stream": true</code>，服务端会以 SSE（Server-Sent Events）格式逐字返回结果。</p>
 <pre>{
-  <span class="k">"model"</span>: <span class="s">"claude-sonnet-4-5"</span>,
+  <span class="k">"model"</span>: <span class="s">"claude-sonnet-5"</span>,
   <span class="k">"messages"</span>: [{<span class="k">"role"</span>: <span class="s">"user"</span>, <span class="k">"content"</span>: <span class="s">"你好"</span>}],
   <span class="k">"stream"</span>: <span class="n">true</span>
 }</pre>
@@ -296,7 +296,7 @@ Authorization: Bearer <span class="s">你的API_KEY</span>
   -H <span class="s">"Authorization: Bearer sk-你的密钥"</span> \
   -H <span class="s">"Content-Type: application/json"</span> \
   -d '{
-    <span class="k">"model"</span>: <span class="s">"claude-sonnet-4-5"</span>,
+    <span class="k">"model"</span>: <span class="s">"claude-sonnet-5"</span>,
     <span class="k">"messages"</span>: [{<span class="k">"role"</span>: <span class="s">"user"</span>, <span class="k">"content"</span>: <span class="s">"你好"</span>}]
   }'</pre>
 
@@ -309,7 +309,7 @@ client = OpenAI(
 )
 
 resp = client.chat.completions.create(
-    model=<span class="s">"claude-sonnet-4-5"</span>,
+    model=<span class="s">"claude-sonnet-5"</span>,
     messages=[{<span class="s">"role"</span>: <span class="s">"user"</span>, <span class="s">"content"</span>: <span class="s">"你好"</span>}]
 )
 print(resp.choices[0].message.content)</pre>
@@ -324,7 +324,7 @@ const client = <span class="n">new</span> OpenAI({
 
 <span class="k">async</span> <span class="n">function</span> <span class="k">run</span>() {
   const resp = <span class="k">await</span> client.chat.completions.create({
-    model: <span class="s">"claude-sonnet-4-5"</span>,
+    model: <span class="s">"claude-sonnet-5"</span>,
     messages: [{ role: <span class="s">"user"</span>, content: <span class="s">"你好"</span> }]
   });
   console.log(resp.choices[0].message.content);
@@ -360,16 +360,16 @@ export ANTHROPIC_BASE_URL=<span class="s">https://fujiuapi.com</span>
         <h3>Q3：支持哪些模型？</h3>
         <p>前往「<a href="https://fujiuapi.com/pricing" target="_blank">模型广场</a>」查看完整可用模型列表，模型会持续更新。</p>
         <div class="tip">
-            🔥 <b>当前推荐好用的 Claude 模型</b>（更新于 2026-09-09）：<br>
+            🔥 <b>当前推荐好用的 Claude 模型</b>（更新于 2026-09-11）：<br>
             <code>claude-opus-4-8</code>、<code>claude-opus-4-7</code>、<code>claude-opus-4-6</code>、<code>claude-opus-4-6-max</code>、<code>claude-opus-4-6-high</code>、<code>claude-opus-4-6-medium</code>、<code>claude-opus-4-6-thinking</code>、<code>claude-opus-4-5-20251101</code>、<code>claude-opus-4-5-20251101-thinking</code>、<code>claude-opus-5</code>、<code>claude-sonnet-5</code>、<code>claude-sonnet-4-6</code>、<code>claude-sonnet-4-5-20250929</code>、<code>claude-sonnet-4-5-20250929-thinking</code>、<code>claude-haiku-4-5-20251001-thinking</code>
             <br><br>
             📌 模型列表会定期更新，建议以「<a href="https://fujiuapi.com/pricing" target="_blank" style="color:var(--primary);">模型广场</a>」显示的为准。
         </div>
         <div class="tip">
-            🔥 <b>当前好用的 GPT 模型</b>（更新于 2026-09-09）：<br><br>
-            <b>最新系列</b>：<code>gpt-5.6-luna</code>、<code>gpt-5.6-sol</code>、<code>gpt-5.5</code>、<code>gpt-5.4</code>、<code>gpt-5.4-pro</code>、<code>gpt-5.4-mini-2026-03-17</code>、<code>gpt-5.4-nano-2026-03-17</code>、<code>gpt-6-astra</code><br>
-            <b>Codex 编程系列</b>：<code>gpt-5.3-codex</code>、<code>gpt-5.2-codex</code>、<code>gpt-5.1-codex</code>、<code>gpt-5-codex</code>、<code>gpt-5-codex-high</code>、<code>gpt-5-codex-medium</code>、<code>gpt-5-codex-low</code><br>
-            <b>GPT-5 系列</b>：<code>gpt-5.1</code>、<code>gpt-5</code>、<code>gpt-5-chat-latest</code>、<code>gpt-5-pro</code>、<code>gpt-5-mini</code>、<code>gpt-5-nano</code><br>
+            🔥 <b>当前好用的 GPT 模型</b>（更新于 2026-09-11）：<br><br>
+            <b>最新系列</b>：<code>gpt-6-astra</code>、<code>gpt-5.6-luna</code>、<code>gpt-5.6-sol</code>、<code>gpt-5.5</code>、<code>gpt-5.4-pro</code>、<code>gpt-5.4-nano</code><br>
+            <b>Codex 编程系列</b>：<code>gpt-5.3-codex</code>、<code>gpt-5-codex</code>、<code>gpt-5-codex-high</code>、<code>gpt-5-codex-medium</code>、<code>gpt-5-codex-low</code><br>
+            <b>GPT-5 系列</b>：<code>gpt-5.1</code>、<code>gpt-5</code>、<code>gpt-5-chat-latest</code>、<code>gpt-5-mini</code>、<code>gpt-5-nano</code><br>
             <b>GPT-4o 系列</b>：<code>gpt-4o</code>、<code>gpt-4o-2024-11-20</code>、<code>gpt-4o-mini</code><br>
             <b>GPT-4.1 系列</b>：<code>gpt-4.1</code>、<code>gpt-4.1-mini</code>、<code>gpt-4.1-nano</code><br>
             <b>经典系列</b>：<code>gpt-4-turbo</code>、<code>gpt-4</code>、<code>gpt-3.5-turbo-1106</code>、<code>gpt-oss-120b</code>

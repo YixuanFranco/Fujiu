@@ -134,6 +134,14 @@ source ~/.zshrc</code></div>
             <div class="code"><code>setx ANTHROPIC_AUTH_TOKEN "你的密钥"
 setx ANTHROPIC_BASE_URL "https://fujiuapi.com/"</code></div>
 
+            <p class="sub-title">## 指定模型（必做）</p>
+            <p>Claude Code 默认请求的模型 ID 在中转站不存在，不指定会直接报 404。把下面三行一并写进 <code>~/.zshrc</code>（Windows 用 <code>setx</code>）：</p>
+            <div class="code"><code>export ANTHROPIC_DEFAULT_OPUS_MODEL="claude-opus-5"
+export ANTHROPIC_DEFAULT_SONNET_MODEL="claude-sonnet-5"
+export ANTHROPIC_DEFAULT_HAIKU_MODEL="claude-haiku-4-5-20251001-thinking"</code></div>
+            <div class="tip info"><b>可选的 Claude 模型：</b>Opus 档还有 <code>claude-opus-4-8</code>、<code>claude-opus-4-7</code>、<code>claude-opus-4-6</code>（另有 <code>-max</code> / <code>-high</code> / <code>-medium</code> / <code>-thinking</code> 四个档位）、<code>claude-opus-4-5-20251101</code>；Sonnet 档还有 <code>claude-sonnet-4-6</code>、<code>claude-sonnet-4-5-20250929</code>；Haiku 档目前<b>只有</b> <code>claude-haiku-4-5-20251001-thinking</code> 一个，没有非 thinking 版本。完整列表以<a href="https://fujiuapi.com" target="_blank" rel="noopener">模型广场</a>为准。</div>
+            <div class="tip warn"><b>只能填 claude 系模型。</b>Claude Code 调用的是 Anthropic 原生协议，模型广场里的 gpt、qwen、glm、deepseek 等填进来不会生效。想用 GPT 系模型请走 <a href="codex-tutorial.html">Codex 教程</a>。</div>
+
             <p><strong>设置完成后启动一次 Claude Code：</strong></p>
             <div class="code"><code>claude</code></div>
         </section>

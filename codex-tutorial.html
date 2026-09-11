@@ -610,7 +610,7 @@ echo 'export FUJIU_API_KEY="sk-你的密钥"' >> ~/.zshrc && source ~/.zshrc
 echo 'export FUJIU_API_KEY="sk-你的密钥"' >> ~/.bashrc && source ~/.bashrc</code></pre>
                 </div>
                 <div class="tip-box warn"><b>用 Codex 桌面 App 的话请注意：</b>这一步写进 <code class="inline">~/.zshrc</code> 的变量<b>只对终端生效</b>。从 Dock / 启动台点图标启动的桌面 App 读不到它，会报 <code class="inline">Missing environment variable: FUJIU_API_KEY</code>——解决办法见文末<a href="#faq-app-env">常见问题第一条</a>。</div>
-                <div class="tip-box good"><b>想换模型？</b>改 config.toml 第一行即可，比如 <code class="inline">model = "gpt-5.3-codex"</code>、<code class="inline">"gpt-5.1-codex"</code>、<code class="inline">"gpt-5.4"</code>，全是扶九API 已上线的模型。</div>
+                <div class="tip-box good"><b>想换模型？</b>改 config.toml 第一行即可，比如 <code class="inline">model = "gpt-5.3-codex"</code>、<code class="inline">"gpt-5-codex"</code>、<code class="inline">"gpt-5.5"</code>，全是扶九API 已上线的模型。</div>
             </div>
         </section>
 
@@ -699,7 +699,8 @@ codex</code></pre>
                 </div>
                 <div class="faq-item">
                     <h4>想换更便宜 / 更强的模型</h4>
-                    <p>改 config.toml 的 <code class="inline">model</code> 字段。编程推荐 <code class="inline">gpt-6-astra</code> / <code class="inline">gpt-5.3-codex</code>；日常问答可用 <code class="inline">gpt-5.4-mini</code>，省钱。</p>
+                    <p>改 config.toml 的 <code class="inline">model</code> 字段。编程推荐 <code class="inline">gpt-6-astra</code> / <code class="inline">gpt-5.3-codex</code> / <code class="inline">gpt-5-codex</code>；想省钱可用 <code class="inline">gpt-5-mini</code>、<code class="inline">gpt-5.4-nano</code>。</p>
+                    <p><b>注意：</b>Codex 只走 Responses 协议，因此<b>只能填 <code class="inline">gpt-</code> / <code class="inline">o</code> 开头的 OpenAI 系模型</b>。模型广场里的 claude、qwen、glm、deepseek 等虽然扶九API 都支持，但那是 OpenAI Chat 协议下的模型，填进 Codex 会报错。要用 Claude 系模型请走 <a href="claude-install-tutorial.html">Claude Code 教程</a>。</p>
                 </div>
                 <div class="faq-item">
                     <h4>怎么查看消耗了多少钱</h4>
