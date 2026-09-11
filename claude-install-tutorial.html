@@ -120,25 +120,33 @@
             <p class="sub-title">## 环境变量</p>
 
             <p><strong>macOS（当前终端临时生效）：</strong></p>
-            <div class="code"><code>export ANTHROPIC_AUTH_TOKEN=你的密钥
-export ANTHROPIC_BASE_URL="https://fujiuapi.com/"</code></div>
+            <div class="code"><code>export ANTHROPIC_AUTH_TOKEN=sk-你的密钥
+export ANTHROPIC_BASE_URL="https://fujiuapi.com"</code></div>
 
             <p><strong>macOS（永久生效，写入 ~/.zshrc）：</strong></p>
-            <div class="code"><code>echo 'export ANTHROPIC_AUTH_TOKEN=你的密钥' >> ~/.zshrc
-echo 'export ANTHROPIC_BASE_URL="https://fujiuapi.com/"' >> ~/.zshrc
+            <div class="code"><code>echo 'export ANTHROPIC_AUTH_TOKEN=sk-你的密钥' >> ~/.zshrc
+echo 'export ANTHROPIC_BASE_URL="https://fujiuapi.com"' >> ~/.zshrc
 source ~/.zshrc</code></div>
 
-            <div class="tip warn"><b>这些变量只对终端生效。</b>写进 <code>~/.zshrc</code> 的 export 只有你在终端里敲 <code>claude</code> 时才读得到。如果你用的是图形界面客户端（从 Dock / 启动台点图标启动），它由系统 launchd 拉起、全程不经过 zsh，会提示读不到密钥。两个办法：一是改用 <code>launchctl setenv ANTHROPIC_AUTH_TOKEN "你的密钥"</code>（<code>ANTHROPIC_BASE_URL</code> 同理），设完彻底退出客户端再重开；二是把配置写进 <code>~/.claude/settings.json</code> 的 <code>env</code> 字段，终端和图形界面都能读到。</div>
+            <div class="tip warn"><b>这些变量只对终端生效。</b>写进 <code>~/.zshrc</code> 的 export 只有你在终端里敲 <code>claude</code> 时才读得到。如果你用的是图形界面客户端（从 Dock / 启动台点图标启动），它由系统 launchd 拉起、全程不经过 zsh，会提示读不到密钥。两个办法：一是改用 <code>launchctl setenv ANTHROPIC_AUTH_TOKEN "sk-你的密钥"</code>（<code>ANTHROPIC_BASE_URL</code> 同理），设完彻底退出客户端再重开；二是把配置写进 <code>~/.claude/settings.json</code> 的 <code>env</code> 字段，终端和图形界面都能读到。</div>
+
+            <div class="tip info"><b>注意 <code>ANTHROPIC_BASE_URL</code> 结尾不要带斜杠。</b>Claude Code 会自己拼接 <code>/v1/messages</code>，多一个斜杠会拼成 <code>//v1/messages</code>，部分网关会返回 404。</div>
 
             <p><strong>Windows：</strong></p>
-            <div class="code"><code>setx ANTHROPIC_AUTH_TOKEN "你的密钥"
-setx ANTHROPIC_BASE_URL "https://fujiuapi.com/"</code></div>
+            <div class="code"><code>setx ANTHROPIC_AUTH_TOKEN "sk-你的密钥"
+setx ANTHROPIC_BASE_URL "https://fujiuapi.com"</code></div>
 
             <p class="sub-title">## 指定模型（必做）</p>
-            <p>Claude Code 默认请求的模型 ID 在中转站不存在，不指定会直接报 404。把下面三行一并写进 <code>~/.zshrc</code>（Windows 用 <code>setx</code>）：</p>
-            <div class="code"><code>export ANTHROPIC_DEFAULT_OPUS_MODEL="claude-opus-5"
-export ANTHROPIC_DEFAULT_SONNET_MODEL="claude-sonnet-5"
-export ANTHROPIC_DEFAULT_HAIKU_MODEL="claude-haiku-4-5-20251001-thinking"</code></div>
+            <p>Claude Code 默认请求的模型 ID 在中转站不存在，不指定会直接报 404。这三行和上面的密钥、地址一样要设置好。</p>
+            <p><strong>macOS：</strong></p>
+            <div class="code"><code>echo 'export ANTHROPIC_DEFAULT_OPUS_MODEL="claude-opus-5"' >> ~/.zshrc
+echo 'export ANTHROPIC_DEFAULT_SONNET_MODEL="claude-sonnet-5"' >> ~/.zshrc
+echo 'export ANTHROPIC_DEFAULT_HAIKU_MODEL="claude-haiku-4-5-20251001-thinking"' >> ~/.zshrc
+source ~/.zshrc</code></div>
+            <p><strong>Windows：</strong></p>
+            <div class="code"><code>setx ANTHROPIC_DEFAULT_OPUS_MODEL "claude-opus-5"
+setx ANTHROPIC_DEFAULT_SONNET_MODEL "claude-sonnet-5"
+setx ANTHROPIC_DEFAULT_HAIKU_MODEL "claude-haiku-4-5-20251001-thinking"</code></div>
             <div class="tip info"><b>可选的 Claude 模型：</b>Opus 档还有 <code>claude-opus-4-8</code>、<code>claude-opus-4-7</code>、<code>claude-opus-4-6</code>（另有 <code>-max</code> / <code>-high</code> / <code>-medium</code> / <code>-thinking</code> 四个档位）、<code>claude-opus-4-5-20251101</code>；Sonnet 档还有 <code>claude-sonnet-4-6</code>、<code>claude-sonnet-4-5-20250929</code>；Haiku 档目前<b>只有</b> <code>claude-haiku-4-5-20251001-thinking</code> 一个，没有非 thinking 版本。完整列表以<a href="https://fujiuapi.com" target="_blank" rel="noopener">模型广场</a>为准。</div>
             <div class="tip warn"><b>只能填 claude 系模型。</b>Claude Code 调用的是 Anthropic 原生协议，模型广场里的 gpt、qwen、glm、deepseek 等填进来不会生效。想用 GPT 系模型请走 <a href="codex-tutorial.html">Codex 教程</a>。</div>
 

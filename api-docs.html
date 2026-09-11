@@ -333,12 +333,25 @@ const client = <span class="n">new</span> OpenAI({
 
         <h3>Claude Code 配置</h3>
 <pre><span class="c"># 设置环境变量（Linux / macOS）</span>
-export ANTHROPIC_API_KEY=<span class="s">sk-你的密钥</span>
+export ANTHROPIC_AUTH_TOKEN=<span class="s">sk-你的密钥</span>
 export ANTHROPIC_BASE_URL=<span class="s">https://fujiuapi.com</span>
+export ANTHROPIC_DEFAULT_OPUS_MODEL=<span class="s">claude-opus-5</span>
+export ANTHROPIC_DEFAULT_SONNET_MODEL=<span class="s">claude-sonnet-5</span>
+export ANTHROPIC_DEFAULT_HAIKU_MODEL=<span class="s">claude-haiku-4-5-20251001-thinking</span>
 
 <span class="c"># Windows PowerShell</span>
-<span class="n">$env</span>:ANTHROPIC_API_KEY=<span class="s">"sk-你的密钥"</span>
-<span class="n">$env</span>:ANTHROPIC_BASE_URL=<span class="s">"https://fujiuapi.com"</span></pre>
+<span class="n">$env</span>:ANTHROPIC_AUTH_TOKEN=<span class="s">"sk-你的密钥"</span>
+<span class="n">$env</span>:ANTHROPIC_BASE_URL=<span class="s">"https://fujiuapi.com"</span>
+<span class="n">$env</span>:ANTHROPIC_DEFAULT_OPUS_MODEL=<span class="s">"claude-opus-5"</span>
+<span class="n">$env</span>:ANTHROPIC_DEFAULT_SONNET_MODEL=<span class="s">"claude-sonnet-5"</span>
+<span class="n">$env</span>:ANTHROPIC_DEFAULT_HAIKU_MODEL=<span class="s">"claude-haiku-4-5-20251001-thinking"</span></pre>
+        <div class="tip">
+            <b>⚠️ 三个要点：</b><br>
+            1. 用 <code>ANTHROPIC_AUTH_TOKEN</code>，<b>不要</b>用 <code>ANTHROPIC_API_KEY</code>。前者以 <code>Authorization: Bearer</code> 发送，后者发的是 <code>x-api-key</code>，本站认前者。<br>
+            2. <code>ANTHROPIC_BASE_URL</code> <b>结尾不要带斜杠</b>。Claude Code 会自己拼接 <code>/v1/messages</code>，多一个斜杠可能导致 404。<br>
+            3. 三个模型变量<b>必须设置</b>。Claude Code 默认请求的模型 ID 在本站不存在，不指定会直接 404。且<b>只能填 claude 系模型</b>，gpt / qwen / glm 等填进来不会生效。<br>
+            完整安装步骤见 <a href="claude-install-tutorial.html" style="color:var(--primary);"><b>Claude Code 安装教程</b></a>。
+        </div>
     </div>
 
     <!-- 五、常见问题 -->
