@@ -150,6 +150,28 @@ setx ANTHROPIC_DEFAULT_HAIKU_MODEL "claude-haiku-4-5-20251001-thinking"</code></
             <div class="tip info"><b>可选的 Claude 模型：</b>Opus 档还有 <code>claude-opus-4-8</code>、<code>claude-opus-4-7</code>、<code>claude-opus-4-6</code>（另有 <code>-max</code> / <code>-high</code> / <code>-medium</code> / <code>-thinking</code> 四个档位）、<code>claude-opus-4-5-20251101</code>；Sonnet 档还有 <code>claude-sonnet-4-6</code>、<code>claude-sonnet-4-5-20250929</code>；Haiku 档目前<b>只有</b> <code>claude-haiku-4-5-20251001-thinking</code> 一个，没有非 thinking 版本。完整列表以<a href="https://fujiuapi.com" target="_blank" rel="noopener">模型广场</a>为准。</div>
             <div class="tip warn"><b>只能填 claude 系模型。</b>Claude Code 调用的是 Anthropic 原生协议，模型广场里的 gpt、qwen、glm、deepseek 等填进来不会生效。想用 GPT 系模型请走 <a href="codex-tutorial.html">Codex 教程</a>。</div>
 
+            <p class="sub-title">## 先验接口（强烈建议）</p>
+            <p>变量配好后，先用一条 curl 确认密钥和接口是通的，再去开 Claude Code。这一步能把「密钥 / 套餐问题」和「客户端配置问题」分开——直接启动 Claude Code 报错，你分不清是哪一边的毛病，很容易白折腾半天。</p>
+            <div class="code"><code>curl https://fujiuapi.com/v1/messages \
+  -H "Authorization: Bearer $ANTHROPIC_AUTH_TOKEN" \
+  -H "anthropic-version: 2023-06-01" \
+  -H "content-type: application/json" \
+  -d '{
+    "model": "claude-sonnet-5",
+    "max_tokens": 64,
+    "messages": [{"role":"user","content":"你好"}]
+  }'</code></div>
+            <p>返回下面这样就说明通了，可以放心去配客户端：</p>
+            <div class="code"><code>{"id":"msg_xxx","type":"message","role":"assistant",
+ "content":[{"type":"text","text":"你好！..."}],
+ "stop_reason":"end_turn","model":"claude-sonnet-5", ... }</code></div>
+            <div class="tip err"><b>报错对照：</b><br>
+            <b>401</b> —— 密钥错误或已过期，检查 <code>echo $ANTHROPIC_AUTH_TOKEN</code> 打出来的值有没有多余空格或引号。<br>
+            <b>403</b> —— 余额不足，去钱包页充值。<br>
+            <b>404</b> —— 模型名有误，或地址写错了。注意这个接口是 <code>/v1/messages</code>，不是 OpenAI 协议的 <code>/v1/chat/completions</code>。<br>
+            <b>400</b> —— 多半是漏了 <code>max_tokens</code>。Anthropic 协议里它是<b>必填</b>的，和 OpenAI 协议不一样。</div>
+            <div class="tip info"><b>别用「你是什么模型」来验证。</b>模型的自我描述并不可靠，经常说错自己的版本号。要确认这次请求实际用的是哪个模型，看返回 JSON 里的 <code>model</code> 字段，那个才是准的。</div>
+
             <p><strong>设置完成后启动一次 Claude Code：</strong></p>
             <div class="code"><code>claude</code></div>
         </section>

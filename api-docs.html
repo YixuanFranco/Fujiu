@@ -282,6 +282,28 @@ Authorization: Bearer <span class="s">你的API_KEY</span>
   <span class="k">"prompt"</span>: <span class="s">"你好"</span>,
   <span class="k">"max_tokens"</span>: <span class="n">100</span>
 }</pre>
+
+        <h3>5. Anthropic 原生协议（Messages）</h3>
+        <p>除 OpenAI 协议外，本站同时提供 Anthropic 原生 <code>/v1/messages</code> 接口，供 Claude Code、Anthropic 官方 SDK 等只认原生协议的客户端使用。</p>
+<pre>POST https://fujiuapi.com/v1/messages
+Authorization: Bearer <span class="s">你的API_KEY</span>
+anthropic-version: <span class="s">2023-06-01</span>
+Content-Type: application/json
+
+{
+  <span class="k">"model"</span>: <span class="s">"claude-sonnet-5"</span>,
+  <span class="k">"max_tokens"</span>: <span class="n">1024</span>,
+  <span class="k">"messages"</span>: [
+    { <span class="k">"role"</span>: <span class="s">"user"</span>, <span class="k">"content"</span>: <span class="s">"你好"</span> }
+  ]
+}</pre>
+        <div class="tip">
+            <b>与 OpenAI 协议的三个差异：</b><br>
+            1. <code>max_tokens</code> 是<b>必填项</b>，漏了会返回 400。OpenAI 协议里它是可选的。<br>
+            2. 需要额外带 <code>anthropic-version: 2023-06-01</code> 请求头。<br>
+            3. 返回结构不同：正文在 <code>content[0].text</code>，不是 <code>choices[0].message.content</code>。<br>
+            流式同样是在请求体里加 <code>"stream": true</code>，按 SSE 返回。<b>本接口只接受 claude 系模型。</b>
+        </div>
     </div>
 
     <!-- 四、代码示例 -->
