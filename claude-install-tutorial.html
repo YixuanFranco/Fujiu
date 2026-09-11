@@ -73,6 +73,13 @@
         }
         .code code { white-space: pre; display: block; font-family: Menlo, Monaco, Consolas, monospace; color: var(--primary-dark); font-size: .92rem; line-height: 1.6; }
         .tip { margin-top: .75rem; padding: .85rem; border-radius: 10px; border-left: 4px solid; }
+        .model-table-wrap { margin-top: .6rem; overflow-x: auto; }
+        .model-table { border-collapse: collapse; width: 100%; min-width: 460px; font-size: .9rem; }
+        .model-table th, .model-table td { padding: .5rem .7rem; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+        .model-table th { color: var(--primary-dark); font-weight: 700; white-space: nowrap; }
+        .model-table td code { font-family: Menlo, Monaco, Consolas, monospace; font-size: .86rem; color: var(--primary-dark); }
+        .model-table tr:last-child td { border-bottom: none; }
+        .model-table .tier { white-space: nowrap; font-weight: 700; color: var(--text); }
         .tip.info { background: rgba(6,182,212,.1); border-color: var(--accent); }
         .tip.ok { background: rgba(16,185,129,.12); border-color: var(--success); }
         .tip.warn { background: rgba(245,158,11,.12); border-color: var(--warning); }
@@ -147,7 +154,20 @@ source ~/.zshrc</code></div>
             <div class="code"><code>setx ANTHROPIC_DEFAULT_OPUS_MODEL "claude-opus-5"
 setx ANTHROPIC_DEFAULT_SONNET_MODEL "claude-sonnet-5"
 setx ANTHROPIC_DEFAULT_HAIKU_MODEL "claude-haiku-4-5-20251001-thinking"</code></div>
-            <div class="tip info"><b>可选的 Claude 模型：</b>Opus 档还有 <code>claude-opus-4-8</code>、<code>claude-opus-4-7</code>、<code>claude-opus-4-6</code>（另有 <code>-max</code> / <code>-high</code> / <code>-medium</code> / <code>-thinking</code> 四个档位）、<code>claude-opus-4-5-20251101</code>；Sonnet 档还有 <code>claude-sonnet-4-6</code>、<code>claude-sonnet-4-5-20250929</code>；Haiku 档目前<b>只有</b> <code>claude-haiku-4-5-20251001-thinking</code> 一个，没有非 thinking 版本。完整列表以<a href="https://fujiuapi.com" target="_blank" rel="noopener">模型广场</a>为准。</div>
+            <p class="sub-title">### 全部可用的 Claude 模型</p>
+            <p>以下 15 个模型均取自本站 <code>/v1/models</code> 接口实测结果，可直接填入上面三个变量。带 <code>-thinking</code> 的为思考版，<code>-max</code> / <code>-high</code> / <code>-medium</code> 为推理强度档位。</p>
+            <div class="model-table-wrap">
+            <table class="model-table">
+                <tr><th>档位</th><th>模型 ID</th></tr>
+                <tr><td class="tier">Opus<br><span style="font-weight:400;color:var(--muted);font-size:.82rem;">最强，10 个</span></td>
+                    <td><code>claude-opus-5</code>（推荐）<br><code>claude-opus-4-8</code><br><code>claude-opus-4-7</code><br><code>claude-opus-4-6</code><br><code>claude-opus-4-6-max</code><br><code>claude-opus-4-6-high</code><br><code>claude-opus-4-6-medium</code><br><code>claude-opus-4-6-thinking</code><br><code>claude-opus-4-5-20251101</code><br><code>claude-opus-4-5-20251101-thinking</code></td></tr>
+                <tr><td class="tier">Sonnet<br><span style="font-weight:400;color:var(--muted);font-size:.82rem;">均衡，4 个</span></td>
+                    <td><code>claude-sonnet-5</code>（推荐）<br><code>claude-sonnet-4-6</code><br><code>claude-sonnet-4-5-20250929</code><br><code>claude-sonnet-4-5-20250929-thinking</code></td></tr>
+                <tr><td class="tier">Haiku<br><span style="font-weight:400;color:var(--muted);font-size:.82rem;">最快，1 个</span></td>
+                    <td><code>claude-haiku-4-5-20251001-thinking</code></td></tr>
+            </table>
+            </div>
+            <div class="tip warn"><b>Haiku 档只有 thinking 版一个选择。</b>线上没有非 thinking 的 Haiku，所以 <code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code> 只能填这一个。Claude Code 会用 Haiku 跑一些轻量后台任务，思考版在这类任务上会多花一点 token，属于目前的唯一选项。</div>
             <div class="tip warn"><b>只能填 claude 系模型。</b>Claude Code 调用的是 Anthropic 原生协议，模型广场里的 gpt、qwen、glm、deepseek 等填进来不会生效。想用 GPT 系模型请走 <a href="codex-tutorial.html">Codex 教程</a>。</div>
 
             <p class="sub-title">## 先验接口（强烈建议）</p>

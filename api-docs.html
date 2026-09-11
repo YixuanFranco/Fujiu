@@ -374,6 +374,30 @@ export ANTHROPIC_DEFAULT_HAIKU_MODEL=<span class="s">claude-haiku-4-5-20251001-t
             3. 三个模型变量<b>必须设置</b>。Claude Code 默认请求的模型 ID 在本站不存在，不指定会直接 404。且<b>只能填 claude 系模型</b>，gpt / qwen / glm 等填进来不会生效。<br>
             完整安装步骤见 <a href="claude-install-tutorial.html" style="color:var(--primary);"><b>Claude Code 安装教程</b></a>。
         </div>
+
+        <h3>Codex 配置</h3>
+        <p>Codex 不读环境变量里的接口地址，需要写配置文件。新建 <code>~/.codex/config.toml</code>：</p>
+<pre>model = <span class="s">"gpt-6-astra"</span>
+model_provider = <span class="s">"fujiu"</span>
+
+[model_providers.fujiu]
+name = <span class="s">"扶九API"</span>
+base_url = <span class="s">"https://fujiuapi.com/v1"</span>
+env_key = <span class="s">"FUJIU_API_KEY"</span>
+wire_api = <span class="s">"responses"</span></pre>
+        <p>再把密钥存进 <code>env_key</code> 指定的环境变量：</p>
+<pre><span class="c"># Linux / macOS</span>
+export FUJIU_API_KEY=<span class="s">sk-你的密钥</span>
+
+<span class="c"># Windows PowerShell</span>
+<span class="n">$env</span>:FUJIU_API_KEY=<span class="s">"sk-你的密钥"</span></pre>
+        <div class="tip">
+            <b>⚠️ 三个要点：</b><br>
+            1. <code>wire_api</code> 必须是 <code>"responses"</code>。新版 Codex 已移除对 <code>"chat"</code> 的支持，填 <code>"chat"</code> 会在加载配置阶段直接报错退出。<br>
+            2. <code>base_url</code> 这里<b>要带 <code>/v1</code></b>，和 Claude Code 不同。Codex 会在其后拼接 <code>/responses</code>。<br>
+            3. 只能填 <code>gpt-</code> / <code>o</code> 开头的 OpenAI 系模型。Codex 走 Responses 协议，claude、qwen、glm 等填进来会报错。<br>
+            完整安装步骤见 <a href="codex-tutorial.html" style="color:var(--primary);"><b>Codex 闯关教程</b></a>。
+        </div>
     </div>
 
     <!-- 五、常见问题 -->
