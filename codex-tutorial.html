@@ -597,8 +597,9 @@ model_provider = "fujiu"
 name = "扶九API"
 base_url = "https://fujiuapi.com/v1"
 env_key = "FUJIU_API_KEY"
-wire_api = "chat"</code></pre>
+wire_api = "responses"</code></pre>
                 </div>
+                <div class="tip-box warn"><b>最后一行必须是 <code class="inline">wire_api = "responses"</code>。</b>早期版本的本教程写的是 <code class="inline">wire_api = "chat"</code>，新版 Codex 已经<b>不再支持</b>该值，照旧配置会导致 codex 直接启动失败。如果你之前配过，把这一行改掉即可。</div>
                 <p><b>4.2 存入你的 Key。</b>把下面命令里的 <code class="inline">sk-你的密钥</code> 换成步骤 3 复制的 Key，执行：</p>
                 <div class="code-block">
                     <button class="copy-btn">复制</button>
@@ -674,6 +675,15 @@ codex</code></pre>
                         <pre><code>launchctl setenv FUJIU_API_KEY "sk-你的密钥"</code></pre>
                     </div>
                     <p>敲 <code class="inline">launchctl getenv FUJIU_API_KEY</code> 能打印出 Key 就说明写进去了。此法<b>重启电脑后失效</b>；想开机自动生效，把这条命令做成 <code class="inline">~/Library/LaunchAgents/</code> 下的 LaunchAgent 开机运行即可。</p>
+                </div>
+                <div class="faq-item">
+                    <h4>启动就报 <code class="inline">Error loading config.toml: `wire_api = "chat"` is no longer supported.</code></h4>
+                    <p>新版 Codex 已移除对 Chat Completions 协议的支持，只走 Responses 协议。打开 <code class="inline">~/.codex/config.toml</code>，把最后一行改成：</p>
+                    <div class="code-block">
+                        <button class="copy-btn">复制</button>
+                        <pre><code>wire_api = "responses"</code></pre>
+                    </div>
+                    <p>改完保存即可，其余几行不用动。（本教程早期版本给的是 <code class="inline">"chat"</code>，在旧版 Codex 上能用，升级后就会报这个错。）</p>
                 </div>
                 <div class="faq-item">
                     <h4>报错 401 / Unauthorized</h4>
